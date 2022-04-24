@@ -6,15 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.example.todolist.databinding.FragmentFirstBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.todolist.databinding.TopicListBinding
+import kotlinx.android.synthetic.main.topic_list.*
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class TopicList : Fragment() {
 
-    private var _binding: FragmentFirstBinding? = null
-
+    private lateinit var topicListAdapter: TopicAdapter
+    private var _binding: TopicListBinding? = null
+    private val topicList = ArrayList<Topic>(mutableListOf(Topic("Eating", R.drawable.ic_baseline_local_pizza_24, 0),
+        Topic("More eating", R.drawable.ic_baseline_local_pizza_24, 0)))
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -24,7 +29,13 @@ class FirstFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        _binding = TopicListBinding.inflate(inflater, container, false)
+
+        val recyclerView : RecyclerView = binding.root.findViewById(R.id.rvTopicItems)
+        topicListAdapter = TopicAdapter(topicList)
+        recyclerView.adapter = topicListAdapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
         return binding.root
 
     }
@@ -32,7 +43,7 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFirst.setOnClickListener {
+        binding.createTopicFab.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
     }
