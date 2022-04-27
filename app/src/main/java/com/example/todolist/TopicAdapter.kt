@@ -35,6 +35,11 @@ class TopicAdapter(
         return topics.size
     }
 
+    fun addTopic(topic: Topic) {
+        topics.add(topic)
+        notifyItemInserted(topics.size - 1)
+    }
+
     fun decreaseTaskNumber(position: Int) {
         topics[position].taskNumber -= 1
         notifyItemChanged(position)

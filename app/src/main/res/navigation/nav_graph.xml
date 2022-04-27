@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.todolist.SecondFragment"
-        android:label="@string/second_fragment_label"
+        android:label="@string/topic_create_label"
         tools:layout="@layout/fragment_second">
 
         <action
