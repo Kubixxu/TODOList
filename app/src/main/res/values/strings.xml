@@ -13,4 +13,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pick_date">Choose date</string>
+    <string name="name_error">Name cannot be empty</string>
+    <string name="date_error">Date cannot be empty</string>
 </resources>

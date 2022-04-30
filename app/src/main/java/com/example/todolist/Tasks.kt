@@ -1,14 +1,20 @@
 package com.example.todolist
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.AttributeSet
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.TasksListBinding
@@ -23,11 +29,11 @@ class Tasks : Fragment() {
 
     private lateinit var taskListAdapter: TasksListAdapter
     private var _binding: TasksListBinding? = null
-    private var tasksList = ArrayList<Task>();
-    // Map<Task, List<Topic>>
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    companion object {
+        var tasksList = ArrayList<Task>();
+    }
+
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -37,9 +43,23 @@ class Tasks : Fragment() {
 
         _binding = TasksListBinding.inflate(inflater, container, false)
 
-//        tasksList.add(Task("University", "Eat", Date(202020202), 0, true))
-//        tasksList.add(Task("University", "Eat", Date(20001212), 1, false))
 
+        val recyclerView : RecyclerView = binding.root.findViewById(R.id.tasksList)
+        prepareTaskList()
+
+        taskListAdapter = TasksListAdapter(tasksList, context)
+        recyclerView.adapter = taskListAdapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        var itemTouchHelper = ItemTouchHelper(SwipeToDelete(taskListAdapter))
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
+
+        return binding.root
+
+    }
+
+    fun prepareTaskList() {
         val recyclerView : RecyclerView = binding.root.findViewById(R.id.tasksList)
         val emptyImage : ImageView = binding.root.findViewById(R.id.emptyTasksImage)
         val emptyText1 : TextView = binding.root.findViewById(R.id.emptyTasksText)
@@ -53,13 +73,6 @@ class Tasks : Fragment() {
             emptyImage.visibility = View.GONE
             emptyText1.visibility = View.GONE
         }
-
-        taskListAdapter = TasksListAdapter(tasksList)
-        recyclerView.adapter = taskListAdapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        //Log.d("INVOKED", "onCreateView has been invoked!")
-        return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,6 +86,6 @@ class Tasks : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
 
+    }
 }

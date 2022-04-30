@@ -51,3 +51,10 @@ class MainActivity : AppCompatActivity() {
                 || super.onSupportNavigateUp()
     }
 }
+
+//Walidacja
+//Compleated list
+//pusty ekran jak usunie się ostatnią
+//ROOM
+//ładny input
+

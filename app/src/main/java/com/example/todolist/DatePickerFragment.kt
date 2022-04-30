@@ -1,11 +1,11 @@
-package `in`.geekofia.example.demoapp
+package com.example.todolist
 
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.DatePicker
 import androidx.fragment.app.DialogFragment
-//import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResult
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,6 +32,6 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
         val selectedDateBundle = Bundle()
         selectedDateBundle.putString("SELECTED_DATE", selectedDate)
 
-//        setFragmentResult("REQUEST_KEY", selectedDateBundle)
+        setFragmentResult("REQUEST_KEY", selectedDateBundle)
     }
 }
