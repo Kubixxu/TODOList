@@ -1,23 +1,28 @@
 package com.example.todolist
 
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.todolist.databinding.FragmentSecondBinding
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
+
+
 class SecondFragment : Fragment() {
 
     private var _binding: FragmentSecondBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var spinner: Spinner
+    private lateinit var icons: Array<Int>
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +30,15 @@ class SecondFragment : Fragment() {
     ): View? {
 
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        spinner = binding.root.findViewById(R.id.colorSpinner)
+
+        val iconTexts = arrayOf("Icon", "", "", "", "", "", "")
+        icons = arrayOf(0,R.drawable.university_hat_icon,R.drawable.ic_baseline_local_pizza_24, R.drawable.ic_baseline_golf_course_24, R.drawable.ic_baseline_handyman_24,
+            R.drawable.ic_baseline_family_restroom_24, R.drawable.ic_baseline_trending_up_24)
+        val spinnerAdapter: IconAdapter =
+            context?.let { IconAdapter(it, R.layout.icon_with_text, icons, iconTexts) }!!
+        spinner.adapter = spinnerAdapter
+
         return binding.root
 
     }
@@ -32,8 +46,16 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+        binding.acceptCreateTopicFab.setOnClickListener {
+            if(binding.editTextTextPersonName.text.toString() != "" && spinner.selectedItemPosition != 0) {
+
+                findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+            }
+            else {
+                val toast = Toast.makeText(context, "You didn't specify topic name or topic icon", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+
         }
     }
 

@@ -14,16 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.TopicListBinding
 import kotlinx.android.synthetic.main.topic_list.*
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
+
 class TopicList : Fragment() {
 
     private lateinit var topicListAdapter: TopicAdapter
     private var _binding: TopicListBinding? = null
     //private val topicList = ArrayList<Topic>(mutableListOf(Topic("Eating", R.drawable.ic_baseline_local_pizza_24, 0),
         //Topic("More eating", R.drawable.ic_baseline_local_pizza_24, 0)))
-    private val topicList = ArrayList<Topic>()
+    val topicList = ArrayList<Topic>()
 
 
     // This property is only valid between onCreateView and

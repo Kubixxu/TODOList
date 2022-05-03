@@ -6,14 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".SecondFragment">
 
-    <Button
-        android:id="@+id/button_second"
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/accept_create_topic_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/previous"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:text="CREATE"
+        android:textColor="@color/white"
+        app:backgroundTint="#74CA78"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:maxImageSize="40dp"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/white" />
 
     <EditText
         android:id="@+id/editTextTextPersonName"
@@ -33,4 +40,16 @@
         android:layout_marginRight="70dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"/>
+
+    <Spinner
+        android:id="@+id/colorSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:background="@drawable/rounded_edit_text"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
