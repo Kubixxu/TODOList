@@ -32,6 +32,7 @@ class UpdateTopic : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         _binding = FragmentUpdateTopicBinding.inflate(inflater, container, false)
 
         spinner = binding.root.findViewById(R.id.colorUpdateSpinner)

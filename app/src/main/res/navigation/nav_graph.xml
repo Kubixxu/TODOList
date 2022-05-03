@@ -32,12 +32,15 @@
     <fragment
         android:id="@+id/updateTopic"
         android:name="com.example.todolist.UpdateTopic"
-        android:label="Update" >
+        android:label="@string/update_label" >
         <action
             android:id="@+id/action_updateTopic_to_FirstFragment"
             app:destination="@id/FirstFragment" />
         <argument
             android:name="currentTopic"
             app:argType="com.example.todolist.model.Topic" />
+        <argument
+            android:name="currentTopicName"
+            app:argType="string" />
     </fragment>
 </navigation>

@@ -62,7 +62,28 @@ class TopicList : Fragment() {
             emptyArrowImg2.visibility = View.GONE
         }
         })
-
+        /*
+        mTopicViewModel.readAllData.observe(viewLifecycleOwner, Observer {
+                topic -> var topicList = emptyList<Pair<Topic, Int>>()
+                for (elem in topic.keys) {
+            topicListAdapter.setData(topic)
+                    if (topic.isEmpty()) {
+                    recyclerView.visibility = View.GONE
+                    emptyImage.visibility = View.VISIBLE
+                    emptyText1.visibility = View.VISIBLE
+                    emptyText2.visibility = View.VISIBLE
+                    emptyArrowImg1.visibility = View.VISIBLE
+                    emptyArrowImg2.visibility = View.VISIBLE
+                    } else {
+                        recyclerView.visibility = View.VISIBLE
+                        emptyImage.visibility = View.GONE
+                        emptyText1.visibility = View.GONE
+                        emptyText2.visibility = View.GONE
+                        emptyArrowImg1.visibility = View.GONE
+                        emptyArrowImg2.visibility = View.GONE
+                    }
+                })
+        */
         //topicListAdapter.setData(topicList)
 
 
