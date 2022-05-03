@@ -1,15 +1,15 @@
 package com.example.todolist
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.topic.view.*
 
-class TopicAdapter(
-    private val topics: MutableList<Topic>
-) : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
+class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
 
+    private var topics: List<Topic> = emptyList()
     class TopicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder {
@@ -35,18 +35,11 @@ class TopicAdapter(
         return topics.size
     }
 
-    fun addTopic(topic: Topic) {
-        topics.add(topic)
-        notifyItemInserted(topics.size - 1)
+    fun setData(topicsList: List<Topic>){
+        this.topics = topicsList
+        //Log.d("INVOKED", "setData has been invoked!")
+        //Log.d("INVOKED", "Given list: " + topicsList)
+        notifyDataSetChanged()
     }
 
-    fun decreaseTaskNumber(position: Int) {
-        topics[position].taskNumber -= 1
-        notifyItemChanged(position)
-    }
-
-    fun increaseTaskNumber(position: Int) {
-        topics[position].taskNumber += 1
-        notifyItemChanged(position)
-    }
 }
