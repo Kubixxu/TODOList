@@ -45,19 +45,22 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
-        android:clickable="true"
-        android:src="@android:drawable/ic_input_add"
-        android:tooltipText="gudgfeu"
+        android:text="@string/create"
+        android:textColor="@color/white"
         app:backgroundTint="@color/green_base"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white" />
+        app:maxImageSize="40dp"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/white"/>
+
 
     <CheckBox
         android:id="@+id/checkBox"

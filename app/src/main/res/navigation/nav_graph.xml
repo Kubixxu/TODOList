@@ -19,6 +19,9 @@
         android:name="com.example.todolist.SecondFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
+        <argument
+            android:name="position"
+            android:defaultValue="-1"/>
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />

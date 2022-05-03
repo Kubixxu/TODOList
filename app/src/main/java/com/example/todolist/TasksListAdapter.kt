@@ -8,8 +8,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import android.content.Context
+import android.os.Bundle
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -47,6 +50,12 @@ class TasksListAdapter(
 
             if (currTask.flag) findViewById<ImageView>(R.id.flag).setImageResource(R.drawable.ic_flag_foreground)
             else findViewById<ImageView>(R.id.flag).setImageDrawable(null)
+
+            val bundle = Bundle()
+            bundle.putInt("position", position)
+            findViewById<ConstraintLayout>(R.id.task)
+                .setOnClickListener(Navigation.createNavigateOnClickListener
+                    (R.id.action_FirstFragment_to_SecondFragment, bundle))
 
         }
     }

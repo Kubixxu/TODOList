@@ -1,7 +1,5 @@
 package com.example.todolist
 
-import android.icu.text.SimpleDateFormat
-import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableStringBuilder
@@ -18,6 +16,7 @@ import com.example.todolist.databinding.FragmentSecondBinding
 import com.google.android.material.textfield.TextInputEditText
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalQueries.localDate
 
 
 /**
@@ -66,10 +65,8 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.floatingActionButton.setOnClickListener {
-            if (addNewTask(view))
-                findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-        }
+        val position = arguments?.getInt("position")
+
         binding.nameInput.doOnTextChanged { text, start, before, count ->
             if (text == "")
                 binding.nameErrorText.visibility = View.VISIBLE
@@ -82,6 +79,53 @@ class SecondFragment : Fragment() {
                 binding.dateErrorText.visibility = View.VISIBLE
             else
                 binding.dateErrorText.visibility = View.GONE
+        }
+
+        if (position != -1) {
+            binding.floatingActionButton.setOnClickListener {
+                if (updateTask(view, position!!))
+                    findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+            }
+            binding.floatingActionButton.text = getString(R.string.update)
+            val currTask = tasksList[position!!]
+
+            binding.nameInput.text = Editable.Factory.getInstance().newEditable(currTask.name)
+            binding.dateInput.text = Editable.Factory.getInstance().newEditable(currTask.date.format(
+                DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+            binding.checkBox.isChecked = currTask.flag
+        } else {
+            binding.floatingActionButton.text = getString(R.string.create)
+            binding.floatingActionButton.setOnClickListener {
+                if (addNewTask(view))
+                    findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+            }
+        }
+    }
+
+    private fun updateTask(view: View, position: Int): Boolean {
+        var errors: Boolean = false
+        view.apply {
+            val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+            val flag = findViewById<CheckBox>(R.id.checkBox).isChecked
+            val name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
+            val date = findViewById<TextInputEditText>(R.id.dateInput).text.toString()
+            if (name == "") {
+                findViewById<TextView>(R.id.nameErrorText).visibility = View.VISIBLE
+                errors = true
+            }
+
+            if (date == "") {
+                findViewById<TextView>(R.id.dateErrorText).visibility = View.VISIBLE
+                errors = true
+            }
+
+            if (!errors) {
+                tasksList[position].name = name
+                tasksList[position].date = LocalDate.parse(date, sdf)
+                tasksList[position].flag = flag
+                return true
+            }
+            return false
         }
     }
 

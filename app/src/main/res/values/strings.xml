@@ -15,4 +15,6 @@
     <string name="pick_date">Choose date</string>
     <string name="name_error">Name cannot be empty</string>
     <string name="date_error">Date cannot be empty</string>
+    <string name="create">CREATE</string>
+    <string name="update">UPDATE</string>
 </resources>

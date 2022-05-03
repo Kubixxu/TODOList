@@ -5,8 +5,8 @@ import java.util.*
 
 data class Task (
     val topicName: String,
-    val name: String,
-    val date: LocalDate,
-    val flag: Boolean,
+    var name: String,
+    var date: LocalDate,
+    var flag: Boolean,
     var completed: Boolean
 )
