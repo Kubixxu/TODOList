@@ -33,7 +33,7 @@ class SecondFragment : Fragment() {
         spinner = binding.root.findViewById(R.id.colorSpinner)
         mTopicViewModel = ViewModelProvider(this).get(TopicViewModel::class.java)
         val iconTexts = arrayOf("Icon", "", "", "", "", "", "")
-        icons = arrayOf(0,R.drawable.university_hat_icon,R.drawable.ic_baseline_local_pizza_24, R.drawable.ic_baseline_golf_course_24, R.drawable.ic_baseline_handyman_24,
+        icons = arrayOf(0,R.drawable.school,R.drawable.ic_baseline_local_pizza_24, R.drawable.ic_baseline_golf_course_24, R.drawable.ic_baseline_handyman_24,
             R.drawable.ic_baseline_family_restroom_24, R.drawable.ic_baseline_trending_up_24)
         val spinnerAdapter: IconAdapter =
             context?.let { IconAdapter(it, R.layout.icon_with_text, icons, iconTexts) }!!

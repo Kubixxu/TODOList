@@ -33,7 +33,7 @@
                 android:layout_marginLeft="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-
+                app:tint="@color/black"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_local_pizza_24" />
 
