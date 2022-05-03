@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#74CA78"
-            app:titleTextColor="@color/black"
+
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
             app:popupTheme="@style/Theme.TODOList.PopupOverlay" >
         </androidx.appcompat.widget.Toolbar>

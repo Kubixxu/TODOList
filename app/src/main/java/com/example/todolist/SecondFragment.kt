@@ -1,19 +1,16 @@
 package com.example.todolist
 
 import android.os.Bundle
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.todolist.data.TopicViewModel
-import com.example.todolist.data.Topic
+import com.example.todolist.viewmodel.TopicViewModel
+import com.example.todolist.model.Topic
 import com.example.todolist.databinding.FragmentSecondBinding
 
 

@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_updateTopic"
+            app:destination="@id/updateTopic" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -25,5 +28,16 @@
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateTopic"
+        android:name="com.example.todolist.UpdateTopic"
+        android:label="Update" >
+        <action
+            android:id="@+id/action_updateTopic_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+        <argument
+            android:name="currentTopic"
+            app:argType="com.example.todolist.model.Topic" />
     </fragment>
 </navigation>

@@ -1,10 +1,12 @@
 package com.example.todolist
 
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.todolist.model.Topic
 import kotlinx.android.synthetic.main.topic.view.*
 
 class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
@@ -26,8 +28,13 @@ class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
         val currTopic = topics[position]
         holder.itemView.apply {
             topicName.text = currTopic.name
-            numberOfItems.text = "${currTopic.taskNumber} items"
+            numberOfItems.text = "0 items"
             topicIcon.setImageResource(currTopic.topicImageId)
+            topicView.setOnLongClickListener {
+                val action = TopicListDirections.actionFirstFragmentToUpdateTopic(currTopic)
+                findNavController().navigate(action)
+                true
+            }
         }
     }
 

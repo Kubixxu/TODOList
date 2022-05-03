@@ -1,7 +1,6 @@
 package com.example.todolist
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todolist.data.TopicViewModel
+import com.example.todolist.viewmodel.TopicViewModel
 import com.example.todolist.databinding.TopicListBinding
-import kotlinx.android.synthetic.main.topic_list.*
 
 
 class TopicList : Fragment() {
@@ -46,9 +44,7 @@ class TopicList : Fragment() {
         val emptyArrowImg2 : ImageView = binding.root.findViewById(R.id.empty_point_arrow2)
         mTopicViewModel = ViewModelProvider(this).get(TopicViewModel::class.java)
         mTopicViewModel.readAllData.observe(viewLifecycleOwner, Observer {
-            topic -> topicListAdapter.setData(topic.map {
-                tp -> Topic(tp.name, tp.topicImageId, 0)
-            }); if (topic.isEmpty()) {
+            topic -> topicListAdapter.setData(topic); if (topic.isEmpty()) {
             recyclerView.visibility = View.GONE
             emptyImage.visibility = View.VISIBLE
             emptyText1.visibility = View.VISIBLE
