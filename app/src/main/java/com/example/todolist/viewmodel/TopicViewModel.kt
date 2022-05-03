@@ -30,4 +30,10 @@ class TopicViewModel(application: Application) : AndroidViewModel(application) {
             repository.updateTopic(topic)
         }
     }
+
+    fun deleteTopic(topic: Topic) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteTopic(topic)
+        }
+    }
 }

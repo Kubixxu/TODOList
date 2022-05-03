@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.topic.view.*
 
 class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
 
-    private var topics: List<Topic> = emptyList()
+    var topics: List<Topic> = emptyList()
     class TopicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder {
@@ -32,6 +32,7 @@ class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
             topicIcon.setImageResource(currTopic.topicImageId)
             topicView.setOnLongClickListener {
                 val action = TopicListDirections.actionFirstFragmentToUpdateTopic(currTopic)
+                //action.
                 findNavController().navigate(action)
                 true
             }
@@ -47,6 +48,10 @@ class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
         //Log.d("INVOKED", "setData has been invoked!")
         //Log.d("INVOKED", "Given list: " + topicsList)
         notifyDataSetChanged()
+    }
+
+    fun itemDeleted(pos: Int) {
+        //topics.remo
     }
 
 }

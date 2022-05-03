@@ -12,6 +12,9 @@ interface TopicDao {
     @Update
     suspend fun updateTopic(topic: Topic)
 
+    @Delete
+    suspend fun deleteTopic(topic: Topic)
+
     @Query("SELECT * FROM topics ORDER BY id ASC")
     fun readAllData(): LiveData<List<Topic>>
 }
