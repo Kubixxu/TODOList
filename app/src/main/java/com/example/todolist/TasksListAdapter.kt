@@ -6,15 +6,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import android.content.Context
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.FragmentTransaction
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.Tasks.Companion.tasksList
 import java.time.format.DateTimeFormatter
@@ -28,7 +23,7 @@ class TasksListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         return TaskViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.fragment_task,
+                R.layout.task,
                 parent,
                 false
             )

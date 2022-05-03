@@ -16,9 +16,9 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.example.todolist.SecondFragment"
+        android:name="com.example.todolist.TaskFromFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/task_form">
         <argument
             android:name="position"
             android:defaultValue="-1"/>

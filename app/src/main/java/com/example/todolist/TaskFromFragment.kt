@@ -12,7 +12,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.todolist.Tasks.Companion.tasksList
-import com.example.todolist.databinding.FragmentSecondBinding
+import com.example.todolist.databinding.TaskFormBinding
 import com.google.android.material.textfield.TextInputEditText
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -22,9 +22,9 @@ import java.time.temporal.TemporalQueries.localDate
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class SecondFragment : Fragment() {
+class TaskFromFragment : Fragment() {
 
-    private var _binding: FragmentSecondBinding? = null
+    private var _binding: TaskFormBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -35,7 +35,7 @@ class SecondFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        _binding = TaskFormBinding.inflate(inflater, container, false)
 
         binding.apply {
             dateInput.setOnClickListener {
