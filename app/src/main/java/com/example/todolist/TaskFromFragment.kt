@@ -87,6 +87,7 @@ class TaskFromFragment : Fragment() {
                     findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
             }
             binding.floatingActionButton.text = getString(R.string.update)
+            binding.floatingActionButton.icon = resources.getDrawable(R.drawable.ic_edit_foreground)
             val currTask = tasksList[position!!]
 
             binding.nameInput.text = Editable.Factory.getInstance().newEditable(currTask.name)

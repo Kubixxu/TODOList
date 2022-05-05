@@ -52,9 +52,8 @@ class TaskMainActivity : AppCompatActivity() {
     }
 }
 
-//Walidacja
 //Compleated list
-//pusty ekran jak usunie się ostatnią
-//ROOM
-//ładny input
+//Usuwanie nie działa
+//ROOM - observer (?)
+
 

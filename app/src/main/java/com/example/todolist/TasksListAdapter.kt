@@ -1,5 +1,6 @@
 package com.example.todolist
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,14 +9,17 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
 import android.os.Bundle
+import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.Tasks.Companion.tasksList
 import java.time.format.DateTimeFormatter
 
 class TasksListAdapter(
-    private val tasks: MutableList<Task>, private val context: Context?
+    val tasks: MutableList<Task>, private val context: Context?
 ) : RecyclerView.Adapter<TasksListAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -31,6 +35,8 @@ class TasksListAdapter(
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+        println(tasksList)
+
         val currTask = tasks[position]
         val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         holder.itemView.apply {
@@ -48,10 +54,9 @@ class TasksListAdapter(
 
             val bundle = Bundle()
             bundle.putInt("position", position)
-            findViewById<ConstraintLayout>(R.id.task)
-                .setOnClickListener(Navigation.createNavigateOnClickListener
-                    (R.id.action_FirstFragment_to_SecondFragment, bundle))
 
+            findViewById<ConstraintLayout>(R.id.task)
+                .setOnLongClickListener { v ->  v.findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, bundle); return@setOnLongClickListener true }
         }
     }
 
@@ -64,28 +69,5 @@ class TasksListAdapter(
         tasks[position].completed = !tasks[position].completed
         notifyItemChanged(position)
     }
-
-    fun deleteTask(position: Int) {
-        val currTask = tasks[position]
-        tasksList.remove(currTask)
-        refresh()
-        notifyItemChanged(position)
-    }
-
-    private fun refresh() {
-        context.let {
-            val fragmentManager = (context as? AppCompatActivity)?.supportFragmentManager
-            fragmentManager?.let {
-                val currentFragment = fragmentManager.findFragmentById(R.id.FirstFragment)
-                currentFragment?.let {
-                    val fragmentTransaction = fragmentManager.beginTransaction()
-                    fragmentTransaction.detach(it)
-                    fragmentTransaction.attach(it)
-                    fragmentTransaction.commit()
-                }
-            }
-        }
-    }
-
 
 }

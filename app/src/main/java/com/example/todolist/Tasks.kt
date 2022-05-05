@@ -1,5 +1,6 @@
 package com.example.todolist
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -47,11 +48,13 @@ class Tasks : Fragment() {
         val recyclerView : RecyclerView = binding.root.findViewById(R.id.tasksList)
         prepareTaskList()
 
+
+        tasksList.sortBy { it.completed }
         taskListAdapter = TasksListAdapter(tasksList, context)
         recyclerView.adapter = taskListAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        var itemTouchHelper = ItemTouchHelper(SwipeToDelete(taskListAdapter))
+        var itemTouchHelper = ItemTouchHelper(SwipeToDelete(this))
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
 
@@ -88,4 +91,24 @@ class Tasks : Fragment() {
         _binding = null
 
     }
+
+
+    fun deleteTask(position: Int) {
+        val builder = AlertDialog.Builder(context)
+        builder.setPositiveButton("Yes") {_,_ -> delete(position)}
+        builder.setNegativeButton("No") {_,_ -> }
+        builder.setTitle("Delete task ${taskListAdapter.tasks[position].name}?")
+        builder.setMessage("Are you sure you want to delete task ${taskListAdapter.tasks[position].name}?")
+        builder.create().show()
+        taskListAdapter.notifyItemChanged(position)
+    }
+
+    private fun delete(position: Int) {
+        val currTask = taskListAdapter.tasks[position]
+        taskListAdapter.tasks.remove(currTask)
+        taskListAdapter.notifyDataSetChanged()
+        println(tasksList)
+        prepareTaskList()
+    }
+
 }
