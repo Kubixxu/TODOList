@@ -14,7 +14,6 @@
     <string name="update_label">Update {currentTopicName}</string>
     <string name="empty_tasks">You don’t have any task ... \n Add something!</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pick_date">Choose date</string>
     <string name="name_error">Name cannot be empty</string>
     <string name="date_error">Date cannot be empty</string>

@@ -18,6 +18,12 @@
         <action
             android:id="@+id/action_topic_list_to_topic_update"
             app:destination="@id/updateTopic" />
+        <action
+            android:id="@+id/action_TopicList_to_Tasks"
+            app:destination="@id/Tasks" />
+        <argument
+            android:name="currentTopic"
+            app:argType="com.example.todolist.model.Topic" />
     </fragment>
     <fragment
         android:id="@+id/AddTopic"
@@ -42,5 +48,26 @@
         <argument
             android:name="currentTopicName"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/Tasks"
+        android:name="com.example.todolist.Tasks"
+        android:label="@string/topics_main_label"
+        tools:layout="@layout/tasks_list">
+        <action
+            android:id="@+id/action_Tasks_to_TaskForm"
+            app:destination="@id/TaskForm" />
+    </fragment>
+    <fragment
+        android:id="@+id/TaskForm"
+        android:name="com.example.todolist.TaskFromFragment"
+        android:label="@string/topics_main_label"
+        tools:layout="@layout/task_form">
+        <argument
+            android:name="position"
+            android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_TaskForm_to_Tasks"
+            app:destination="@id/Tasks" />
     </fragment>
 </navigation>
