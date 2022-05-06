@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todolist.data.TodoDatabase
 import com.example.todolist.data.TopicDao
-import com.example.todolist.databinding.FragmentSecondBinding
 import com.example.todolist.databinding.FragmentUpdateTopicBinding
 import com.example.todolist.model.Topic
 import com.example.todolist.repository.TopicRepository

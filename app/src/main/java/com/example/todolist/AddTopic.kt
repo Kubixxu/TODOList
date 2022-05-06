@@ -11,13 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.todolist.viewmodel.TopicViewModel
 import com.example.todolist.model.Topic
-import com.example.todolist.databinding.FragmentSecondBinding
+import com.example.todolist.databinding.FragmentAddTopicBinding
 
 
 
-class SecondFragment : Fragment() {
+class AddTopic : Fragment() {
 
-    private var _binding: FragmentSecondBinding? = null
+    private var _binding: FragmentAddTopicBinding? = null
     private lateinit var mTopicViewModel: TopicViewModel
     private val binding get() = _binding!!
     private lateinit var spinner: Spinner
@@ -29,7 +29,7 @@ class SecondFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        _binding = FragmentAddTopicBinding.inflate(inflater, container, false)
         spinner = binding.root.findViewById(R.id.colorSpinner)
         mTopicViewModel = ViewModelProvider(this).get(TopicViewModel::class.java)
         val iconTexts = arrayOf("Icon", "", "", "", "", "", "")

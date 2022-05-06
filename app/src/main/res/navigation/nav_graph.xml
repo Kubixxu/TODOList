@@ -14,16 +14,16 @@
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/AddTopic" />
         <action
             android:id="@+id/action_FirstFragment_to_updateTopic"
             app:destination="@id/updateTopic" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.todolist.SecondFragment"
+        android:id="@+id/AddTopic"
+        android:name="com.example.todolist.AddTopic"
         android:label="@string/topic_create_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_add_topic">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
