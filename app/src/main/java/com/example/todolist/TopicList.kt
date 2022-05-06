@@ -100,7 +100,7 @@ class TopicList : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.createTopicFab.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            findNavController().navigate(R.id.action_topic_list_to_topic_addition)
         }
     }
 

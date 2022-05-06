@@ -49,7 +49,7 @@ class AddTopic : Fragment() {
         binding.acceptCreateTopicFab.setOnClickListener {
             if(binding.editTextTextPersonName.text.toString() != "" && spinner.selectedItemPosition != 0) {
                 insertTopicToDatabase()
-                findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+                findNavController().navigate(R.id.action_topic_addition_to_topic_list)
             }
             else {
                 val toast = Toast.makeText(context, "You didn't specify topic name or topic icon", Toast.LENGTH_SHORT)

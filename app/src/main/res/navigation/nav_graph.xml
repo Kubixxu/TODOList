@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/TopicList">
 
     <fragment
-        android:id="@+id/FirstFragment"
+        android:id="@+id/TopicList"
         android:name="com.example.todolist.TopicList"
         android:label="@string/topics_main_label"
 
         tools:layout="@layout/topic_list">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            android:id="@+id/action_topic_list_to_topic_addition"
             app:destination="@id/AddTopic" />
         <action
-            android:id="@+id/action_FirstFragment_to_updateTopic"
+            android:id="@+id/action_topic_list_to_topic_update"
             app:destination="@id/updateTopic" />
     </fragment>
     <fragment
@@ -26,16 +26,16 @@
         tools:layout="@layout/fragment_add_topic">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_topic_addition_to_topic_list"
+            app:destination="@id/TopicList" />
     </fragment>
     <fragment
         android:id="@+id/updateTopic"
         android:name="com.example.todolist.UpdateTopic"
         android:label="@string/update_label" >
         <action
-            android:id="@+id/action_updateTopic_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_topic_update_to_topic_list"
+            app:destination="@id/TopicList" />
         <argument
             android:name="currentTopic"
             app:argType="com.example.todolist.model.Topic" />

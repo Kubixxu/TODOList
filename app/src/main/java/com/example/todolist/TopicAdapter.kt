@@ -31,7 +31,7 @@ class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
             numberOfItems.text = "0 items"
             topicIcon.setImageResource(currTopic.topicImageId)
             topicView.setOnLongClickListener {
-                val action = TopicListDirections.actionFirstFragmentToUpdateTopic(currTopic, currTopic.name)
+                val action = TopicListDirections.actionTopicListToTopicUpdate(currTopic, currTopic.name)
                 //action.
                 findNavController().navigate(action)
                 true
