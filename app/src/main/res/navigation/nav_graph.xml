@@ -21,9 +21,7 @@
         <action
             android:id="@+id/action_TopicList_to_Tasks"
             app:destination="@id/Tasks" />
-        <argument
-            android:name="currentTopic"
-            app:argType="com.example.todolist.model.Topic" />
+
     </fragment>
     <fragment
         android:id="@+id/AddTopic"
@@ -52,11 +50,17 @@
     <fragment
         android:id="@+id/Tasks"
         android:name="com.example.todolist.Tasks"
-        android:label="@string/topics_main_label"
+        android:label="@string/task_list_of_topic"
         tools:layout="@layout/tasks_list">
         <action
             android:id="@+id/action_Tasks_to_TaskForm"
             app:destination="@id/TaskForm" />
+        <argument
+            android:name="currentTopic"
+            app:argType="com.example.todolist.model.Topic" />
+        <argument
+            android:name="currentTopicName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/TaskForm"

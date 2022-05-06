@@ -36,6 +36,11 @@ class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
                 findNavController().navigate(action)
                 true
             }
+            topicView.setOnClickListener {
+                val action = TopicListDirections.actionTopicListToTasks(currTopic, currTopic.name)
+                //action.
+                findNavController().navigate(action)
+            }
         }
     }
 

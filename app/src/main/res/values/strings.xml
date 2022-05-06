@@ -12,6 +12,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="update_label">Update {currentTopicName}</string>
+    <string name="task_list_of_topic">Tasks of {currentTopicName}</string>
     <string name="empty_tasks">You don’t have any task ... \n Add something!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="pick_date">Choose date</string>
