@@ -1,26 +1,18 @@
 package com.example.todolist
 
 import android.app.AlertDialog
-import android.content.Context
-import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
-import android.util.AttributeSet
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.TasksListBinding
-import java.time.LocalDate
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -82,7 +74,7 @@ class Tasks : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.fabAddTask.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            findNavController().navigate(R.id.action_Tasks_to_TaskForm)
         }
     }
 

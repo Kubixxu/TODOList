@@ -16,7 +16,6 @@ import com.example.todolist.databinding.TaskFormBinding
 import com.google.android.material.textfield.TextInputEditText
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalQueries.localDate
 
 
 /**
@@ -84,7 +83,7 @@ class TaskFromFragment : Fragment() {
         if (position != -1) {
             binding.floatingActionButton.setOnClickListener {
                 if (updateTask(view, position!!))
-                    findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+                    findNavController().navigate(R.id.action_TaskForm_to_Tasks)
             }
             binding.floatingActionButton.text = getString(R.string.update)
             binding.floatingActionButton.icon = resources.getDrawable(R.drawable.ic_edit_foreground)
@@ -98,7 +97,7 @@ class TaskFromFragment : Fragment() {
             binding.floatingActionButton.text = getString(R.string.create)
             binding.floatingActionButton.setOnClickListener {
                 if (addNewTask(view))
-                    findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+                    findNavController().navigate(R.id.action_TaskForm_to_Tasks)
             }
         }
     }
