@@ -1,6 +1,7 @@
 package com.example.todolist
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -52,8 +53,9 @@ class AddTopic : Fragment() {
                 findNavController().navigate(R.id.action_topic_addition_to_topic_list)
             }
             else {
-                val toast = Toast.makeText(context, "You didn't specify topic name or topic icon", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(requireContext(), "You didn't specify topic name or topic icon", Toast.LENGTH_SHORT)
                 toast.show()
+                //Log.d("INVOKED", "Toast should appear")
             }
 
         }
