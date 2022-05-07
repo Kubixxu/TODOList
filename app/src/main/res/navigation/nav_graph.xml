@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/TopicList"
-        android:name="com.example.todolist.TopicList"
+        android:name="com.example.todolist.topic.TopicList"
         android:label="@string/topics_main_label"
 
         tools:layout="@layout/topic_list">
@@ -22,12 +22,13 @@
             android:id="@+id/action_TopicList_to_Tasks"
             app:destination="@id/Tasks" />
         <argument
-            android:name="currentTopic"
-            app:argType="com.example.todolist.model.Topic" />
+            android:name="topicId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/AddTopic"
-        android:name="com.example.todolist.AddTopic"
+        android:name="com.example.todolist.topic.AddTopic"
         android:label="@string/topic_create_label"
         tools:layout="@layout/fragment_add_topic">
 
@@ -37,7 +38,7 @@
     </fragment>
     <fragment
         android:id="@+id/updateTopic"
-        android:name="com.example.todolist.UpdateTopic"
+        android:name="com.example.todolist.topic.UpdateTopic"
         android:label="@string/update_label" >
         <action
             android:id="@+id/action_topic_update_to_topic_list"
@@ -51,21 +52,33 @@
     </fragment>
     <fragment
         android:id="@+id/Tasks"
-        android:name="com.example.todolist.Tasks"
-        android:label="@string/topics_main_label"
+        android:name="com.example.todolist.task.Tasks"
+        android:label="@string/tasks_main_label"
         tools:layout="@layout/tasks_list">
         <action
             android:id="@+id/action_Tasks_to_TaskForm"
             app:destination="@id/TaskForm" />
+        <action
+            android:id="@+id/action_Tasks_to_TopicList"
+            app:destination="@id/TopicList" />
+        <argument
+            android:name="topicId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/TaskForm"
-        android:name="com.example.todolist.TaskFromFragment"
-        android:label="@string/topics_main_label"
+        android:name="com.example.todolist.task.TaskFromFragment"
+        android:label="@string/tasks_main_label"
         tools:layout="@layout/task_form">
         <argument
-            android:name="position"
-            android:defaultValue="-1"/>
+            android:name="currentTask"
+            app:nullable="true"
+            app:argType="com.example.todolist.model.Task"/>
+        <argument
+            android:name="topicId"
+            android:defaultValue="-1"
+            app:argType="integer"/>
         <action
             android:id="@+id/action_TaskForm_to_Tasks"
             app:destination="@id/Tasks" />

@@ -1,4 +1,4 @@
-package com.example.todolist
+package com.example.todolist.task
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +10,23 @@ import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todolist.Tasks.Companion.tasksList
+import com.example.todolist.R
+import com.example.todolist.model.Task
+import com.example.todolist.topic.TopicListDirections
+import kotlinx.android.synthetic.main.tasks_list.view.*
+import kotlinx.android.synthetic.main.topic.view.*
 import java.time.format.DateTimeFormatter
 
-class TasksListAdapter(
-    val tasks: MutableList<Task>, private val context: Context?
+class TasksListAdapter(private val context: Context?, private var topicId: Int?
 ) : RecyclerView.Adapter<TasksListAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    var tasks: List<Task> = emptyList()
+
+    companion object {
+        var staticTopicId = 0
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         return TaskViewHolder(
@@ -30,8 +39,7 @@ class TasksListAdapter(
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        println(tasksList)
-
+        staticTopicId = topicId!!
         val currTask = tasks[position]
         val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         holder.itemView.apply {
@@ -46,12 +54,13 @@ class TasksListAdapter(
 
             if (currTask.flag) findViewById<ImageView>(R.id.flag).setImageResource(R.drawable.ic_flag_foreground)
             else findViewById<ImageView>(R.id.flag).setImageDrawable(null)
-
-            val bundle = Bundle()
-            bundle.putInt("position", position)
-
             findViewById<ConstraintLayout>(R.id.task)
-                .setOnLongClickListener { v ->  v.findNavController().navigate(R.id.action_Tasks_to_TaskForm, bundle); return@setOnLongClickListener true }
+                .setOnLongClickListener {
+                    val action = TasksDirections.actionTasksToTaskForm(currTask)
+                    action.topicId = staticTopicId
+                    findNavController().navigate(action)
+                    true
+            }
         }
     }
 
@@ -63,6 +72,11 @@ class TasksListAdapter(
     private fun setCompletion(position: Int) {
         tasks[position].completed = !tasks[position].completed
         notifyItemChanged(position)
+    }
+
+    fun setData(tasksList: List<Task>){
+        this.tasks = tasksList
+        notifyDataSetChanged()
     }
 
 }

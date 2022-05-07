@@ -1,4 +1,4 @@
-package com.example.todolist
+package com.example.todolist.topic
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,14 +8,11 @@ import android.view.ViewGroup
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.todolist.data.TodoDatabase
-import com.example.todolist.data.TopicDao
+import com.example.todolist.R
 import com.example.todolist.databinding.FragmentUpdateTopicBinding
 import com.example.todolist.model.Topic
-import com.example.todolist.repository.TopicRepository
 import com.example.todolist.viewmodel.TopicViewModel
 import kotlinx.android.synthetic.main.fragment_update_topic.*
 import kotlinx.android.synthetic.main.fragment_update_topic.view.*
@@ -36,8 +33,14 @@ class UpdateTopic : Fragment() {
 
         spinner = binding.root.findViewById(R.id.colorUpdateSpinner)
         val iconTexts = arrayOf("Icon", "", "", "", "", "", "")
-        icons = arrayOf(0,R.drawable.school,R.drawable.ic_baseline_local_pizza_24, R.drawable.ic_baseline_golf_course_24, R.drawable.ic_baseline_handyman_24,
-            R.drawable.ic_baseline_family_restroom_24, R.drawable.ic_baseline_trending_up_24)
+        icons = arrayOf(0,
+            R.drawable.school,
+            R.drawable.ic_baseline_local_pizza_24,
+            R.drawable.ic_baseline_golf_course_24,
+            R.drawable.ic_baseline_handyman_24,
+            R.drawable.ic_baseline_family_restroom_24,
+            R.drawable.ic_baseline_trending_up_24
+        )
         val spinnerAdapter: IconAdapter =
             context?.let { IconAdapter(it, R.layout.icon_with_text, icons, iconTexts) }!!
         spinner.adapter = spinnerAdapter

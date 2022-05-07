@@ -1,16 +1,16 @@
 package com.example.todolist
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import androidx.navigation.fragment.findNavController
 import com.example.todolist.databinding.ActivityMainBinding
+import com.example.todolist.task.Tasks
+import com.example.todolist.topic.TopicAdapter
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,4 +51,21 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
+
+//    override fun onBackPressed() {
+//        val fragmentList: List<*> = supportFragmentManager.fragments
+//        var handled = false
+//        for (f in fragmentList) {
+//            if (f is Tasks) {
+//                handled = (f as Tasks).onBackPressed()
+//                if (handled) {
+//                    break
+//                }
+//            }
+//        }
+//        if (!handled) {
+//            super.onBackPressed()
+//        }
+//    }
+
 }

@@ -1,11 +1,12 @@
-package com.example.todolist
+package com.example.todolist.topic
 
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.todolist.R
+import com.example.todolist.topic.TopicListDirections
 import com.example.todolist.model.Topic
 import kotlinx.android.synthetic.main.topic.view.*
 
@@ -31,11 +32,18 @@ class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
             numberOfItems.text = "0 items"
             topicIcon.setImageResource(currTopic.topicImageId)
             topicView.setOnLongClickListener {
-                val action = TopicListDirections.actionTopicListToTopicUpdate(currTopic, currTopic.name)
-                //action.
+                val action =
+                    TopicListDirections.actionTopicListToTopicUpdate(currTopic, currTopic.name)
                 findNavController().navigate(action)
                 true
             }
+
+            topicView.setOnClickListener {
+                val action = TopicListDirections.actionTopicListToTasks()
+                action.topicId = currTopic.id
+                findNavController().navigate(action)
+            }
+            println( "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + currTopic.id)
         }
     }
 

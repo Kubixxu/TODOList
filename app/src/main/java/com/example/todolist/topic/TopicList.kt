@@ -1,4 +1,4 @@
-package com.example.todolist
+package com.example.todolist.topic
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.todolist.R
 import com.example.todolist.viewmodel.TopicViewModel
 import com.example.todolist.databinding.TopicListBinding
 

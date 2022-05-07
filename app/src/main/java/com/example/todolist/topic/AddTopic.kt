@@ -1,4 +1,4 @@
-package com.example.todolist
+package com.example.todolist.topic
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +9,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.todolist.R
 import com.example.todolist.viewmodel.TopicViewModel
 import com.example.todolist.model.Topic
 import com.example.todolist.databinding.FragmentAddTopicBinding
@@ -33,8 +34,14 @@ class AddTopic : Fragment() {
         spinner = binding.root.findViewById(R.id.colorSpinner)
         mTopicViewModel = ViewModelProvider(this).get(TopicViewModel::class.java)
         val iconTexts = arrayOf("Icon", "", "", "", "", "", "")
-        icons = arrayOf(0,R.drawable.school,R.drawable.ic_baseline_local_pizza_24, R.drawable.ic_baseline_golf_course_24, R.drawable.ic_baseline_handyman_24,
-            R.drawable.ic_baseline_family_restroom_24, R.drawable.ic_baseline_trending_up_24)
+        icons = arrayOf(0,
+            R.drawable.school,
+            R.drawable.ic_baseline_local_pizza_24,
+            R.drawable.ic_baseline_golf_course_24,
+            R.drawable.ic_baseline_handyman_24,
+            R.drawable.ic_baseline_family_restroom_24,
+            R.drawable.ic_baseline_trending_up_24
+        )
         val spinnerAdapter: IconAdapter =
             context?.let { IconAdapter(it, R.layout.icon_with_text, icons, iconTexts) }!!
         spinner.adapter = spinnerAdapter

@@ -36,4 +36,5 @@ class TopicViewModel(application: Application) : AndroidViewModel(application) {
             repository.deleteTopic(topic)
         }
     }
+
 }

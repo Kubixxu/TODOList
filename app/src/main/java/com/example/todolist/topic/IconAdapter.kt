@@ -1,16 +1,13 @@
-package com.example.todolist
+package com.example.todolist.topic
 
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.drawable.Drawable
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.icon_with_text.view.*
+import com.example.todolist.R
 
 
 class IconAdapter(context: Context, resource: Int, val icons: Array<Int>, val texts: Array<String>) : ArrayAdapter<Int>(context, resource, icons) {

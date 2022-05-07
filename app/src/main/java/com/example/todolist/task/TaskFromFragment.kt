@@ -1,4 +1,4 @@
-package com.example.todolist
+package com.example.todolist.task
 
 import android.os.Bundle
 import android.text.Editable
@@ -10,9 +10,13 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.todolist.Tasks.Companion.tasksList
+import com.example.todolist.R
 import com.example.todolist.databinding.TaskFormBinding
+import com.example.todolist.model.Task
+import com.example.todolist.viewmodel.TaskViewModel
+import com.example.todolist.viewmodel.TopicViewModel
 import com.google.android.material.textfield.TextInputEditText
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -24,6 +28,7 @@ import java.time.format.DateTimeFormatter
 class TaskFromFragment : Fragment() {
 
     private var _binding: TaskFormBinding? = null
+    private val taskViewModel: TaskViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -38,11 +43,9 @@ class TaskFromFragment : Fragment() {
 
         binding.apply {
             dateInput.setOnClickListener {
-                // create new instance of DatePickerFragment
                 val datePickerFragment = DatePickerFragment()
                 val supportFragmentManager = requireActivity().supportFragmentManager
 
-                // we have to implement setFragmentResultListener
                 supportFragmentManager.setFragmentResultListener(
                     "REQUEST_KEY",
                     viewLifecycleOwner
@@ -64,7 +67,7 @@ class TaskFromFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val position = arguments?.getInt("position")
+        var currentTask = arguments?.get("currentTask")
 
         binding.nameInput.doOnTextChanged { text, start, before, count ->
             if (text == "")
@@ -80,19 +83,19 @@ class TaskFromFragment : Fragment() {
                 binding.dateErrorText.visibility = View.GONE
         }
 
-        if (position != -1) {
+        if (currentTask != null) {
+            currentTask = currentTask as Task
             binding.floatingActionButton.setOnClickListener {
-                if (updateTask(view, position!!))
+                if (updateTask(view, currentTask!!))
                     findNavController().navigate(R.id.action_TaskForm_to_Tasks)
             }
             binding.floatingActionButton.text = getString(R.string.update)
             binding.floatingActionButton.icon = resources.getDrawable(R.drawable.ic_edit_foreground)
-            val currTask = tasksList[position!!]
 
-            binding.nameInput.text = Editable.Factory.getInstance().newEditable(currTask.name)
-            binding.dateInput.text = Editable.Factory.getInstance().newEditable(currTask.date.format(
+            binding.nameInput.text = Editable.Factory.getInstance().newEditable(currentTask.name)
+            binding.dateInput.text = Editable.Factory.getInstance().newEditable(currentTask.date.format(
                 DateTimeFormatter.ofPattern("dd-MM-yyyy")))
-            binding.checkBox.isChecked = currTask.flag
+            binding.checkBox.isChecked = currentTask.flag
         } else {
             binding.floatingActionButton.text = getString(R.string.create)
             binding.floatingActionButton.setOnClickListener {
@@ -102,7 +105,7 @@ class TaskFromFragment : Fragment() {
         }
     }
 
-    private fun updateTask(view: View, position: Int): Boolean {
+    private fun updateTask(view: View, currentTask: Task): Boolean {
         var errors: Boolean = false
         view.apply {
             val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
@@ -120,9 +123,12 @@ class TaskFromFragment : Fragment() {
             }
 
             if (!errors) {
-                tasksList[position].name = name
-                tasksList[position].date = LocalDate.parse(date, sdf)
-                tasksList[position].flag = flag
+                currentTask.name = name
+                currentTask.date = LocalDate.parse(date, sdf)
+                currentTask.flag = flag
+
+                taskViewModel.updateTask(currentTask)
+
                 return true
             }
             return false
@@ -147,7 +153,7 @@ class TaskFromFragment : Fragment() {
             }
 
             if (!errors) {
-                tasksList.add(Task("University", name, LocalDate.parse(date, sdf), flag, false))
+                taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name,LocalDate.parse(date, sdf), flag, false, LocalDate.now()))
                 return true
             }
             return false
