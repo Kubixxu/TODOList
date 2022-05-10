@@ -44,12 +44,12 @@ class Tasks : Fragment() {
             topicId = arguments?.getInt("topicId")!!
         }
         _binding = TasksListBinding.inflate(inflater, container, false)
-        taskListAdapter = TasksListAdapter(context, topicId)
 
 
         val recyclerView : RecyclerView = binding.root.findViewById(R.id.tasksList)
         prepareTaskList()
 //
+        taskListAdapter = TasksListAdapter(context, topicId, taskViewModel)
 //        tasksList.sortBy { it.completed }
         recyclerView.adapter = taskListAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -136,10 +136,10 @@ class Tasks : Fragment() {
 
     fun deleteTask(position: Int) {
         val builder = AlertDialog.Builder(context)
-        builder.setPositiveButton("Yes") {_,_ -> taskViewModel.deleteTask(taskListAdapter.tasks[position])}
+        builder.setPositiveButton("Yes") {_,_ -> taskViewModel.deleteTask(taskListAdapter.tasks[position].task)}
         builder.setNegativeButton("No") {_,_ -> }
-        builder.setTitle("Delete task ${taskListAdapter.tasks[position].name}?")
-        builder.setMessage("Are you sure you want to delete task ${taskListAdapter.tasks[position].name}?")
+        builder.setTitle("Delete task ${taskListAdapter.tasks[position].task.name}?")
+        builder.setMessage("Are you sure you want to delete task ${taskListAdapter.tasks[position].task.name}?")
         builder.create().show()
         prepareTaskList()
     }
