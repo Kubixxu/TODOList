@@ -43,7 +43,6 @@ class TopicList : Fragment() {
         val emptyImage : ImageView = binding.root.findViewById(R.id.empty_list_img)
         val emptyText1 : TextView = binding.root.findViewById(R.id.empty_textView1)
         val emptyText2 : TextView = binding.root.findViewById(R.id.empty_textView2)
-        val emptyArrowImg1 : ImageView = binding.root.findViewById(R.id.empty_point_arrow1)
         val emptyArrowImg2 : ImageView = binding.root.findViewById(R.id.empty_point_arrow2)
         mTopicViewModel = ViewModelProvider(this).get(TopicViewModel::class.java)
         mTopicViewModel.readAllData.observe(viewLifecycleOwner, Observer {
@@ -52,14 +51,12 @@ class TopicList : Fragment() {
             emptyImage.visibility = View.VISIBLE
             emptyText1.visibility = View.VISIBLE
             emptyText2.visibility = View.VISIBLE
-            emptyArrowImg1.visibility = View.VISIBLE
             emptyArrowImg2.visibility = View.VISIBLE
         } else {
             recyclerView.visibility = View.VISIBLE
             emptyImage.visibility = View.GONE
             emptyText1.visibility = View.GONE
             emptyText2.visibility = View.GONE
-            emptyArrowImg1.visibility = View.GONE
             emptyArrowImg2.visibility = View.GONE
         }
         })
@@ -125,7 +122,6 @@ class TopicList : Fragment() {
         val emptyImage : ImageView = binding.root.findViewById(R.id.empty_list_img)
         val emptyText1 : TextView = binding.root.findViewById(R.id.empty_textView1)
         val emptyText2 : TextView = binding.root.findViewById(R.id.empty_textView2)
-        val emptyArrowImg1 : ImageView = binding.root.findViewById(R.id.empty_point_arrow1)
         val emptyArrowImg2 : ImageView = binding.root.findViewById(R.id.empty_point_arrow2)
         mTopicViewModel.readAllData.observe(viewLifecycleOwner, Observer {
                 topic -> topicListAdapter.setData(topic); if (topic.isEmpty()) {
@@ -133,14 +129,12 @@ class TopicList : Fragment() {
             emptyImage.visibility = View.VISIBLE
             emptyText1.visibility = View.VISIBLE
             emptyText2.visibility = View.VISIBLE
-            emptyArrowImg1.visibility = View.VISIBLE
             emptyArrowImg2.visibility = View.VISIBLE
         } else {
             recyclerView.visibility = View.VISIBLE
             emptyImage.visibility = View.GONE
             emptyText1.visibility = View.GONE
             emptyText2.visibility = View.GONE
-            emptyArrowImg1.visibility = View.GONE
             emptyArrowImg2.visibility = View.GONE
         }
         })

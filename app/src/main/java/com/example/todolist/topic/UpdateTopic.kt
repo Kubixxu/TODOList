@@ -44,7 +44,7 @@ class UpdateTopic : Fragment() {
         val spinnerAdapter: IconAdapter =
             context?.let { IconAdapter(it, R.layout.icon_with_text, icons, iconTexts) }!!
         spinner.adapter = spinnerAdapter
-        binding.root.editTextUpdatePersonName.setText(args.currentTopic.name)
+        binding.root.editTextUpdatePersonNameText.setText(args.currentTopic.name)
         spinner.setSelection(icons.indexOf(args.currentTopic.topicImageId))
 
         binding.root.accept_update_topic_fab.setOnClickListener {
@@ -55,7 +55,7 @@ class UpdateTopic : Fragment() {
 
 
     private fun updateItem() {
-        val name = editTextUpdatePersonName.text.toString()
+        val name = editTextUpdatePersonNameText.text.toString()
         val topicImageId = icons[spinner.selectedItemPosition]
         if(name != "" && spinner.selectedItemPosition != 0) {
             val updatedTopic = Topic(args.currentTopic.id, name, topicImageId)

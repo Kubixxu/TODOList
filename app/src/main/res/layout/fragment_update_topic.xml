@@ -10,45 +10,61 @@
         android:id="@+id/accept_update_topic_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        android:text="UPDATE"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/update"
         android:textColor="@color/white"
-        app:backgroundTint="#74CA78"
+        app:backgroundTint="@color/green_base"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"
-        android:textAlignment="center"/>
+        app:icon="@drawable/ic_edit_foreground"
+        app:iconTint="@color/white"/>
 
-    <EditText
+<!--    <EditText-->
+<!--        android:id="@+id/editTextUpdatePersonName"-->
+<!--        android:layout_width="289dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="80dp"-->
+<!--        android:background="@drawable/rounded_edit_text"-->
+
+<!--        android:hint="Topic name"-->
+<!--        android:inputType="textPersonName"-->
+<!--        android:textColor="#878787"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.573"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTextUpdatePersonName"
-        android:layout_width="match_parent"
+        android:layout_width="289dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Topic name"
-
-        android:textColor="#878787"
-        android:background="@drawable/rounded_edit_text"
+        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="60dp"
-        android:layout_marginLeft="70dp"
-        android:layout_marginRight="70dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextUpdatePersonNameText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Topic name"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Spinner
         android:id="@+id/colorUpdateSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginRight="70dp"
+        android:background="@drawable/rounded_edit_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextUpdatePersonName"
-        android:layout_marginTop="60dp"
-        android:layout_marginLeft="70dp"
-        android:layout_marginRight="70dp"
-        android:background="@drawable/rounded_edit_text"/>
+        app:layout_constraintTop_toBottomOf="@+id/editTextUpdatePersonName" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

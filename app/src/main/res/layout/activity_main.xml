@@ -19,7 +19,7 @@
             android:background="#74CA78"
 
             android:theme="@style/ThemeOverlay.AppCompat.Light"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
+            app:titleTextAppearance="@style/TextAppearance.AppCompat.Medium"
             app:popupTheme="@style/Theme.TODOList.PopupOverlay" >
         </androidx.appcompat.widget.Toolbar>
 

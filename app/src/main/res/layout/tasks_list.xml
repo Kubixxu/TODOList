@@ -34,33 +34,37 @@
         app:srcCompat="@android:drawable/ic_input_add"
         app:tint="@color/white" />
 
-    <LinearLayout
-        android:id="@+id/linearLayoutEmptyTasks"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+    <ImageView
+        android:id="@+id/emptyTasksImage"
+        android:layout_width="334dp"
+        android:layout_height="303dp"
+        android:layout_gravity="center|fill|center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:srcCompat="@drawable/empty_img" />
 
-        <ImageView
-            android:id="@+id/emptyTasksImage"
-            android:layout_width="wrap_content"
-            android:layout_height="377dp"
-            android:layout_gravity="center|fill|center_vertical"
-            android:layout_marginTop="50dp"
-            app:srcCompat="@drawable/empty_img" />
+    <TextView
+        android:id="@+id/emptyTasksText"
+        android:layout_width="354dp"
+        android:layout_height="68dp"
+        android:gravity="center|center_vertical"
+        android:text="@string/empty_tasks"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emptyTasksImage" />
 
-        <TextView
-            android:id="@+id/emptyTasksText"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:gravity="center|center_vertical"
-            android:text="@string/empty_tasks"
-            android:textSize="20sp" />
+    <ImageView
+        android:id="@+id/empty_point_arrow2_topic"
+        android:layout_width="145dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/arrow2"
+        app:layout_constraintBottom_toTopOf="@+id/fabAddTask"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emptyTasksText"
+        app:layout_constraintVertical_bias="0.0" />
 
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

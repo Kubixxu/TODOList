@@ -99,6 +99,7 @@ class Tasks : Fragment() {
         val recyclerView : RecyclerView = binding.root.findViewById(R.id.tasksList)
         val emptyImage : ImageView = binding.root.findViewById(R.id.emptyTasksImage)
         val emptyText1 : TextView = binding.root.findViewById(R.id.emptyTasksText)
+        val emptyArrowImg2 : ImageView = binding.root.findViewById(R.id.empty_point_arrow2_topic)
         taskViewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
         taskViewModel.readAllData.observe(viewLifecycleOwner, Observer {
                 tasks ->  setTasks(tasks)
@@ -106,10 +107,12 @@ class Tasks : Fragment() {
                 recyclerView.visibility = View.GONE
                 emptyImage.visibility = View.VISIBLE
                 emptyText1.visibility = View.VISIBLE
+                emptyArrowImg2.visibility = View.VISIBLE
             } else {
                 recyclerView.visibility = View.VISIBLE
                 emptyImage.visibility = View.GONE
                 emptyText1.visibility = View.GONE
+                emptyArrowImg2.visibility = View.GONE
             }
         })
     }
