@@ -55,7 +55,7 @@ class AddTopic : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.acceptCreateTopicFab.setOnClickListener {
-            if(binding.editTextTextPersonNameText.text.toString() != "" && spinner.selectedItemPosition != 0) {
+            if(binding.editTextTextPersonName.text.toString() != "" && spinner.selectedItemPosition != 0) {
                 insertTopicToDatabase()
                 findNavController().navigate(R.id.action_topic_addition_to_topic_list)
             }
@@ -69,7 +69,7 @@ class AddTopic : Fragment() {
     }
 
     private fun insertTopicToDatabase() {
-        val topicName = binding.editTextTextPersonNameText.text.toString()
+        val topicName = binding.editTextTextPersonName.text.toString()
         val imageId = icons[spinner.selectedItemPosition]
         val topic = Topic(0, topicName, imageId)
         mTopicViewModel.addTopic(topic)

@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.todolist.databinding.ActivityMainBinding
 import com.example.todolist.task.Tasks
 import com.example.todolist.topic.TopicAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +28,9 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
 
     }
 

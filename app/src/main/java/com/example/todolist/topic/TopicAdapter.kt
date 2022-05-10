@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.topic.view.*
 
 class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
 
-    var topics: List<Topic> = emptyList()
+    var topics: List<Pair<Topic, Int>> = emptyList()
     class TopicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder {
@@ -27,10 +27,10 @@ class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: TopicViewHolder, position: Int) {
-        val currTopic = topics[position]
+        val currTopic = topics[position].first
         holder.itemView.apply {
             topicName.text = currTopic.name
-            numberOfItems.text = "0 items"
+            numberOfItems.text = if (topics[position].second != 1) topics[position].second.toString() + " items" else topics[position].second.toString() + " item"
             topicIcon.setImageResource(currTopic.topicImageId)
             topicView.setOnLongClickListener {
                 val action =
@@ -52,7 +52,7 @@ class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
         return topics.size
     }
 
-    fun setData(topicsList: List<Topic>){
+    fun setData(topicsList: List<Pair<Topic, Int>>){
         this.topics = topicsList
         //Log.d("INVOKED", "setData has been invoked!")
         //Log.d("INVOKED", "Given list: " + topicsList)

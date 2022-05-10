@@ -43,7 +43,8 @@
         android:src="@drawable/empty_img"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/empty_textView1"
@@ -53,6 +54,7 @@
         android:text="You don't have any topics..."
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="17sp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/empty_list_img" />
 
@@ -62,6 +64,7 @@
         android:layout_height="wrap_content"
         android:text="Add something!"
         android:textSize="17sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/empty_textView1"
         app:layout_constraintStart_toStartOf="@+id/empty_textView1"
         app:layout_constraintTop_toBottomOf="@+id/empty_textView1" />
@@ -72,6 +75,7 @@
         android:layout_height="0dp"
         android:layout_marginEnd="16dp"
         android:src="@drawable/arrow2"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/create_topic_fab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/empty_textView2"

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +35,21 @@ class Tasks : Fragment() {
 
     companion object {
         var topicId = -1
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // This callback will only be called when MyFragment is at least Started.
+        val callback = object : OnBackPressedCallback(true) {
+
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_Tasks_to_TopicList)
+            }
+
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+
     }
 
     override fun onCreateView(

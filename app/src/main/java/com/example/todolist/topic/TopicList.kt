@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
 import com.example.todolist.viewmodel.TopicViewModel
 import com.example.todolist.databinding.TopicListBinding
+import com.example.todolist.model.Topic
 
 
 class TopicList : Fragment() {
@@ -46,7 +47,8 @@ class TopicList : Fragment() {
         val emptyArrowImg2 : ImageView = binding.root.findViewById(R.id.empty_point_arrow2)
         mTopicViewModel = ViewModelProvider(this).get(TopicViewModel::class.java)
         mTopicViewModel.readAllData.observe(viewLifecycleOwner, Observer {
-            topic -> topicListAdapter.setData(topic); if (topic.isEmpty()) {
+            topic ->
+            topicListAdapter.setData(changeTopicMapToList(topic)); if (topic.isEmpty()) {
             recyclerView.visibility = View.GONE
             emptyImage.visibility = View.VISIBLE
             emptyText1.visibility = View.VISIBLE
@@ -109,10 +111,10 @@ class TopicList : Fragment() {
 
     fun deleteItem(position: Int) {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setPositiveButton("Yes") {_,_ -> mTopicViewModel.deleteTopic(topicListAdapter.topics[position])}
+        builder.setPositiveButton("Yes") {_,_ -> mTopicViewModel.deleteTopic(topicListAdapter.topics[position].first)}
         builder.setNegativeButton("No") {_,_ -> }
-        builder.setTitle("Delete topic ${topicListAdapter.topics[position].name}?")
-        builder.setMessage("Are you sure you want to delete topic ${topicListAdapter.topics[position].name}?")
+        builder.setTitle("Delete topic ${topicListAdapter.topics[position].first.name}?")
+        builder.setMessage("Are you sure you want to delete topic ${topicListAdapter.topics[position].first.name}?")
         builder.create().show()
         changeTopicData()
         //mTopicViewModel.
@@ -124,7 +126,7 @@ class TopicList : Fragment() {
         val emptyText2 : TextView = binding.root.findViewById(R.id.empty_textView2)
         val emptyArrowImg2 : ImageView = binding.root.findViewById(R.id.empty_point_arrow2)
         mTopicViewModel.readAllData.observe(viewLifecycleOwner, Observer {
-                topic -> topicListAdapter.setData(topic); if (topic.isEmpty()) {
+                topic -> topicListAdapter.setData(changeTopicMapToList(topic)); if (topic.isEmpty()) {
             recyclerView.visibility = View.GONE
             emptyImage.visibility = View.VISIBLE
             emptyText1.visibility = View.VISIBLE
@@ -138,5 +140,10 @@ class TopicList : Fragment() {
             emptyArrowImg2.visibility = View.GONE
         }
         })
+    }
+    private fun changeTopicMapToList(topicMap: Map<Topic, Int>): List<Pair<Topic, Int>> {
+        val topicList =  ArrayList<Pair<Topic, Int>>()
+        topicMap.forEach { entry -> topicList.add(Pair(entry.key, entry.value)) }
+        return topicList
     }
 }

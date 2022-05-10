@@ -15,6 +15,7 @@ interface TopicDao {
     @Delete
     suspend fun deleteTopic(topic: Topic)
 
-    @Query("SELECT * FROM topics ORDER BY id ASC")
-    fun readAllData(): LiveData<List<Topic>>
+    @MapInfo(valueColumn = "taskCount")
+    @Query("SELECT topics.*, COUNT(tasks.id) as taskCount FROM topics LEFT JOIN tasks ON topics.id = tasks.topic GROUP BY topics.id ORDER BY topics.id ASC")
+    fun readAllData(): LiveData<Map<Topic, Int>>
 }

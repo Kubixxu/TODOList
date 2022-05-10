@@ -6,7 +6,7 @@ import com.example.todolist.model.Topic
 
 class TopicRepository(private val topicDao: TopicDao) {
 
-    val readAllData: LiveData<List<Topic>> = topicDao.readAllData()
+    val readAllData: LiveData<Map<Topic, Int>> = topicDao.readAllData()
 
     suspend fun addTopic(topic: Topic) {
         topicDao.addTopic(topic)

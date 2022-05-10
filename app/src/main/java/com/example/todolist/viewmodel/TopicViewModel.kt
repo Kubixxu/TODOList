@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TopicViewModel(application: Application) : AndroidViewModel(application) {
-    val readAllData: LiveData<List<Topic>>
+    val readAllData: LiveData<Map<Topic, Int>>
     private val repository: TopicRepository
     init {
         val topicDao = TodoDatabase.getDatabase(application).topicDao()
