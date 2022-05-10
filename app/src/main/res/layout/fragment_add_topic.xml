@@ -11,63 +11,59 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:text="@string/create"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:text="CREATE"
         android:textColor="@color/white"
-        app:backgroundTint="@color/green_base"
+        app:backgroundTint="#74CA78"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"
         app:icon="@android:drawable/ic_input_add"
-        app:iconTint="@color/white"/>
-
-<!--    <EditText-->
-<!--        android:id="@+id/editTextTextPersonName"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:ems="10"-->
-<!--        android:inputType="textPersonName"-->
-<!--        android:hint="Topic name"-->
-
-<!--        android:textColor="#878787"-->
-<!--        android:background="@drawable/rounded_edit_text"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        android:layout_marginTop="60dp"-->
-<!--        android:layout_marginLeft="70dp"-->
-<!--        android:layout_marginRight="70dp"-->
-<!--        android:paddingTop="8dp"-->
-<!--        android:paddingBottom="8dp"/>-->
-
-    <Spinner
-        android:id="@+id/colorSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="70dp"
-        android:layout_marginTop="120dp"
-        android:layout_marginRight="70dp"
-        android:background="@drawable/rounded_edit_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:iconTint="@color/white" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editTextTextPersonName"
-        android:layout_width="289dp"
+        android:id="@+id/editTextTextPersonNameLayout"
+        android:layout_width="290dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextTextPersonNameText"
+            android:id="@+id/editTextTextPersonName"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+
             android:hint="Topic name"
             android:singleLine="true" />
+
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonNameLayout"
+        android:background="#e4e8e8">
+
+        <Spinner
+            android:id="@+id/colorSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:popupBackground="#e8e4e4"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
