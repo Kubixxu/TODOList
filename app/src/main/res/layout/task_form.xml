@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:translationZ="2dp"
     tools:context=".task.TaskFromFragment">
 
 
@@ -55,11 +56,11 @@
         android:text="@string/create"
         android:textColor="@color/white"
         app:backgroundTint="@color/green_base"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="40dp"
-        app:icon="@android:drawable/ic_input_add"
-        app:iconTint="@color/white"/>
+        app:maxImageSize="40dp" />
 
 
     <CheckBox
@@ -101,5 +102,83 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateInputLayout"
         app:layout_constraintVertical_bias="0.035" />
+
+    <Button
+        android:id="@+id/record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+
+    <LinearLayout
+        android:id="@+id/stopRecordLayout"
+        android:layout_width="343dp"
+        android:layout_height="136dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/playRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            app:srcCompat="@drawable/ic_play_foreground" />
+
+        <ImageButton
+            android:id="@+id/deleteRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FDFDFD"
+            android:foregroundTint="#FFFFFF"
+            app:srcCompat="@drawable/ic_delete_foreground" />
+
+        <ImageButton
+            android:id="@+id/saveRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FBFBFB"
+            app:srcCompat="@drawable/ic_send_foreground" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/startRecordLayout"
+        android:layout_width="417dp"
+        android:layout_height="141dp"
+        android:background="#DC3E3E"
+        android:backgroundTint="#FFFFFF"
+        android:foregroundTint="#FFFFFF"
+        android:gravity="right|center_vertical"
+        android:orientation="vertical"
+        android:translationZ="2dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/stopRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
+            android:backgroundTint="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_pause_foreground"
+            app:tint="#2B2B2B"
+            tools:srcCompat="@drawable/ic_pause_foreground" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

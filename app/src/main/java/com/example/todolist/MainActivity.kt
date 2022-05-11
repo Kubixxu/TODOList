@@ -1,9 +1,11 @@
 package com.example.todolist
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -11,7 +13,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.todolist.databinding.ActivityMainBinding
 import com.example.todolist.task.Tasks
 import com.example.todolist.topic.TopicAdapter
+import java.util.jar.Manifest
 
+const val REQUEST_CODE = 200
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -29,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -51,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
+
 
 //    override fun onBackPressed() {
 //        val fragmentList: List<*> = supportFragmentManager.fragments

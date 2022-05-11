@@ -82,5 +82,13 @@
         <action
             android:id="@+id/action_TaskForm_to_Tasks"
             app:destination="@id/Tasks" />
+        <action
+            android:id="@+id/action_TaskForm_to_recordFragment"
+            app:destination="@id/recordFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/recordFragment"
+        android:name="com.example.todolist.task.Record"
+        android:label="record_audio_fragment"
+        tools:layout="@layout/record_audio_fragment" />
 </navigation>

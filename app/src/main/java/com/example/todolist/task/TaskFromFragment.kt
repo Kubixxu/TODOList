@@ -1,6 +1,10 @@
 package com.example.todolist.task
 
+import android.content.pm.PackageManager
+import android.media.MediaRecorder
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
@@ -8,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,8 +22,9 @@ import com.example.todolist.R
 import com.example.todolist.databinding.TaskFormBinding
 import com.example.todolist.model.Task
 import com.example.todolist.viewmodel.TaskViewModel
-import com.example.todolist.viewmodel.TopicViewModel
 import com.google.android.material.textfield.TextInputEditText
+import java.io.File
+import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -25,10 +32,20 @@ import java.time.format.DateTimeFormatter
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
+const val REQUEST_CODE = 200
 class TaskFromFragment : Fragment() {
 
     private var _binding: TaskFormBinding? = null
     private val taskViewModel: TaskViewModel by activityViewModels()
+    private var permission = arrayOf(android.Manifest.permission.RECORD_AUDIO)
+    private var permissionGranted = false
+    private var recorder: MediaRecorder = MediaRecorder()
+    private var dirPath = ""
+    private var filename = ""
+    private var isRecording = false
+    private var isStop = false
+
+
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -60,10 +77,30 @@ class TaskFromFragment : Fragment() {
             }
         }
 
+        permissionGranted = ActivityCompat.checkSelfPermission(requireContext(), permission[0]) == PackageManager.PERMISSION_GRANTED
+
+        if (!permissionGranted) {
+            ActivityCompat.requestPermissions(requireActivity(), permission, com.example.todolist.REQUEST_CODE)
+        }
+
         return binding.root
 
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == com.example.todolist.REQUEST_CODE) {
+            permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -102,6 +139,16 @@ class TaskFromFragment : Fragment() {
                 if (addNewTask(view))
                     findNavController().navigate(R.id.action_TaskForm_to_Tasks)
             }
+        }
+        binding.record.setOnClickListener {
+            binding.floatingActionButton.visibility = View.GONE
+            binding.startRecordLayout.visibility = View.VISIBLE
+            startRecording()
+        }
+        binding.stopRecord.setOnClickListener {
+            binding.startRecordLayout.visibility = View.GONE
+            binding.stopRecordLayout.visibility = View.VISIBLE
+            stopRecording()
         }
     }
 
@@ -163,5 +210,41 @@ class TaskFromFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun startRecording() {
+        if (!permissionGranted) {
+            ActivityCompat.requestPermissions(requireActivity(), permission, com.example.todolist.REQUEST_CODE)
+            return
+        } else {
+            dirPath = "C:/Users/annam/Desktop/"
+
+//            var simpleDateFormat = SimpleDateFormat("yyyy.MM.DD_hh.mm.ss")
+//            var date = simpleDateFormat.format(Date())
+
+//            filename = "audio_record_$date"
+            val destination: File? = Environment.getExternalStorageDirectory()
+            recorder.apply {
+                setAudioSource(MediaRecorder.AudioSource.MIC)
+                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                setOutputFile("${destination}/audio.mp3")
+                try {
+                    prepare()
+                    start()
+                } catch (e: IOException) {
+                    println(e.stackTraceToString())
+                }
+            }
+        }
+    }
+
+    private fun stopRecording() {
+        recorder.apply {
+            stop()
+            reset()
+        }
     }
 }
