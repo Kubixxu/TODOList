@@ -1,10 +1,15 @@
 package com.example.todolist.task
 
+import android.R.attr.path
 import android.app.Activity.RESULT_OK
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
@@ -14,8 +19,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -24,13 +31,13 @@ import com.example.todolist.R
 import com.example.todolist.databinding.TaskFormBinding
 import com.example.todolist.model.Task
 import com.example.todolist.viewmodel.TaskViewModel
-import com.example.todolist.viewmodel.TopicViewModel
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.icon_with_text.*
 import kotlinx.android.synthetic.main.task_form.*
+import java.io.*
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.jar.Manifest
 
 
 /**
@@ -40,6 +47,7 @@ class TaskFromFragment : Fragment() {
 
     private var _binding: TaskFormBinding? = null
     private var imageUri: Uri? = null
+    private var imageUriIntPath: Uri? = null
     private val taskViewModel: TaskViewModel by activityViewModels()
     private val IMAGE_PICK_CODE = 1000
     private val PERMISSION_CODE = 1001
@@ -79,6 +87,8 @@ class TaskFromFragment : Fragment() {
                 } else {
                     userImageView.setImageDrawable(null)
                     imageUri = null
+                    imageUriIntPath!!.path?.let { it1 -> deleteImage(it1) }
+                    imageUriIntPath = null
                     addRemoveImageButton.text = "ADD IMAGE"
                 }
             }
@@ -102,7 +112,9 @@ class TaskFromFragment : Fragment() {
             //Log.d("INVOKED", "onCreateView has been invoked!")
             if (data != null) {
                 imageUri = data.data
-                userImageView.setImageURI(imageUri)
+                imageUriIntPath = saveImageToInternalMemory(generateImageName("usr_img.jpg"))
+                //Log.d("IMAGE", imageUriIntPath.toString())
+                imageUriIntPath!!.path?.let { loadImageFromInternalMem(it) }
                 addRemoveImageButton.text = "REMOVE IMAGE"
             }
         }
@@ -125,6 +137,49 @@ class TaskFromFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun loadImageFromInternalMem(path: String) {
+        try {
+            val f = File(path)
+            val b = BitmapFactory.decodeStream(FileInputStream(f))
+            userImageView.setImageBitmap(b)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun generateImageName(baseName: String) : String {
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss.SSS")
+        val formatted = current.format(formatter)
+        return formatted + baseName
+    }
+
+    private fun saveImageToInternalMemory(name: String) : Uri {
+        val cw = ContextWrapper(requireContext())
+        val directory: File = cw.getDir("user_images", Context.MODE_PRIVATE)
+        val imgPath = File(directory, name)
+        var fos: FileOutputStream? = null
+        try {
+            fos = FileOutputStream(imgPath)
+            val bitmapImage = ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, imageUri!!))
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            try {
+                fos!!.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return imgPath.toUri()
+    }
+
+    private fun deleteImage(name: String) {
+        val f = File(name)
+        f.delete()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -158,7 +213,8 @@ class TaskFromFragment : Fragment() {
             binding.nameInput.text = Editable.Factory.getInstance().newEditable(currentTask.name)
             binding.dateInput.text = Editable.Factory.getInstance().newEditable(currentTask.date.format(
                 DateTimeFormatter.ofPattern("dd-MM-yyyy")))
-            //binding.userImageView.setImageURI(Uri.parse(currentTask.imageUri))
+            //imageUriIntPath = Uri.parse(currentTask.imageUri)
+            //loadImageFromInternalMem(currentTask.imageUri)
             binding.checkBox.isChecked = currentTask.flag
         } else {
             binding.floatingActionButton.text = getString(R.string.create)
@@ -177,6 +233,7 @@ class TaskFromFragment : Fragment() {
             val name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
             val date = findViewById<TextInputEditText>(R.id.dateInput).text.toString()
 
+
             if (name == "") {
                 findViewById<TextView>(R.id.nameErrorText).visibility = View.VISIBLE
                 errors = true
@@ -191,8 +248,8 @@ class TaskFromFragment : Fragment() {
                 currentTask.name = name
                 currentTask.date = LocalDate.parse(date, sdf)
                 currentTask.flag = flag
-                //currentTask.imageUri = imageUri.toString()
-
+                //Log.d("ISNULL", imageUriIntPath.toString())
+                //currentTask.imageUri = imageUriIntPath?.path
                 taskViewModel.updateTask(currentTask)
 
                 return true
@@ -208,6 +265,7 @@ class TaskFromFragment : Fragment() {
             val flag = findViewById<CheckBox>(R.id.checkBox).isChecked
             val name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
             val date = findViewById<TextInputEditText>(R.id.dateInput).text.toString()
+
             if (name == "") {
                 findViewById<TextView>(R.id.nameErrorText).visibility = View.VISIBLE
                 errors = true
@@ -219,6 +277,7 @@ class TaskFromFragment : Fragment() {
             }
 
             if (!errors) {
+                // JJ - trzeba będzie dodać ścieżkę do obrazka
                 taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name,LocalDate.parse(date, sdf), flag, false, LocalDate.now()))
                 return true
             }
