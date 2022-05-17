@@ -35,20 +35,13 @@ import java.time.format.DateTimeFormatter
 const val REQUEST_CODE = 200
 class TaskFromFragment : Fragment() {
 
-    private var _binding: TaskFormBinding? = null
     private val taskViewModel: TaskViewModel by activityViewModels()
-    private var permission = arrayOf(android.Manifest.permission.RECORD_AUDIO)
-    private var permissionGranted = false
-    private var recorder: MediaRecorder = MediaRecorder()
-    private var dirPath = ""
-    private var filename = ""
-    private var isRecording = false
-    private var isStop = false
-
 
 
     // This property is only valid between onCreateView and
     // onDestroyView.
+
+    private var _binding: TaskFormBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -77,26 +70,8 @@ class TaskFromFragment : Fragment() {
             }
         }
 
-        permissionGranted = ActivityCompat.checkSelfPermission(requireContext(), permission[0]) == PackageManager.PERMISSION_GRANTED
-
-        if (!permissionGranted) {
-            ActivityCompat.requestPermissions(requireActivity(), permission, com.example.todolist.REQUEST_CODE)
-        }
-
         return binding.root
 
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == com.example.todolist.REQUEST_CODE) {
-            permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-        }
     }
 
 
@@ -141,14 +116,7 @@ class TaskFromFragment : Fragment() {
             }
         }
         binding.record.setOnClickListener {
-            binding.floatingActionButton.visibility = View.GONE
-            binding.startRecordLayout.visibility = View.VISIBLE
-            startRecording()
-        }
-        binding.stopRecord.setOnClickListener {
-            binding.startRecordLayout.visibility = View.GONE
-            binding.stopRecordLayout.visibility = View.VISIBLE
-            stopRecording()
+            findNavController().navigate(R.id.action_TaskForm_to_recordingFragment)
         }
     }
 
@@ -212,39 +180,4 @@ class TaskFromFragment : Fragment() {
         _binding = null
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.R)
-    private fun startRecording() {
-        if (!permissionGranted) {
-            ActivityCompat.requestPermissions(requireActivity(), permission, com.example.todolist.REQUEST_CODE)
-            return
-        } else {
-            dirPath = "C:/Users/annam/Desktop/"
-
-//            var simpleDateFormat = SimpleDateFormat("yyyy.MM.DD_hh.mm.ss")
-//            var date = simpleDateFormat.format(Date())
-
-//            filename = "audio_record_$date"
-            val destination: File? = Environment.getExternalStorageDirectory()
-            recorder.apply {
-                setAudioSource(MediaRecorder.AudioSource.MIC)
-                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                setOutputFile("${destination}/audio.mp3")
-                try {
-                    prepare()
-                    start()
-                } catch (e: IOException) {
-                    println(e.stackTraceToString())
-                }
-            }
-        }
-    }
-
-    private fun stopRecording() {
-        recorder.apply {
-            stop()
-            reset()
-        }
-    }
 }
