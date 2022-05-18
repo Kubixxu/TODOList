@@ -65,6 +65,9 @@
             android:name="topicId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_Tasks_to_imageFullScreen"
+            app:destination="@id/imageFullScreen" />
     </fragment>
     <fragment
         android:id="@+id/TaskForm"
@@ -100,5 +103,13 @@
                 app:argType="string"/>
         </action>
     </dialog>
+    <fragment
+        android:id="@+id/imageFullScreen"
+        android:name="com.example.todolist.task.ImageFullScreen"
+        android:label=""
+        tools:layout="@layout/image_full_screen">
+        <argument android:name="imgPath"
+            app:argType="string"/>
+    </fragment>
 
 </navigation>

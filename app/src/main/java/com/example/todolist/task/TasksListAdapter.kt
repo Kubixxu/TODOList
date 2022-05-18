@@ -1,8 +1,10 @@
 package com.example.todolist.task
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +15,14 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
 import com.example.todolist.model.Task
+import com.example.todolist.topic.TopicListDirections
 import com.example.todolist.viewmodel.TaskViewModel
+import kotlinx.android.synthetic.main.task_form.*
 import kotlinx.android.synthetic.main.tasks_list.view.*
 import kotlinx.android.synthetic.main.topic.view.*
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.time.format.DateTimeFormatter
 import kotlin.streams.toList
 
@@ -41,7 +47,6 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
         val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
         return TaskViewHolder(view)
     }
-
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         staticTopicId = topicId!!
@@ -71,7 +76,19 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                 }
                 else voice.setImageDrawable(null)
 
+                if (currTask.imagePath != null) {
+                    loadImageFromInternalMem(currTask.imagePath!!, findViewById<ImageView>(R.id.userSmallImage))
+                    findViewById<ImageView>(R.id.userSmallImage).visibility = View.VISIBLE
+                    findViewById<ImageView>(R.id.userSmallImage).setOnClickListener {
 
+                        val action = TasksDirections.actionTasksToImageFullScreen(currTask.imagePath!!)
+                        findNavController().navigate(action)
+                    }
+
+                } else {
+                    findViewById<ImageView>(R.id.userSmallImage).setImageDrawable(null)
+                    findViewById<ImageView>(R.id.userSmallImage).visibility = View.GONE
+                }
 
                 findViewById<ConstraintLayout>(R.id.task)
                     .setOnLongClickListener {
@@ -129,6 +146,16 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
 
         this.tasks = data.toList()
         notifyDataSetChanged()
+    }
+
+    private fun loadImageFromInternalMem(path: String, iv: ImageView) {
+        try {
+            val f = File(path)
+            val b = BitmapFactory.decodeStream(FileInputStream(f))
+            iv.setImageBitmap(b)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
     }
 
 }

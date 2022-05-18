@@ -26,5 +26,6 @@ data class Task(
     var flag: Boolean,
     var completed: Boolean,
     var dateCreation: LocalDate,
-    var voiceRecordPath: String?
+    var voiceRecordPath: String?,
+    var imagePath: String?
 ) : Parcelable

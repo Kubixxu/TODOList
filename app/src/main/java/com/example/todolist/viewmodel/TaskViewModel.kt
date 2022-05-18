@@ -45,6 +45,9 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
             if (task.voiceRecordPath?.let { File(it).exists() } == true) task.voiceRecordPath?.let {
                 File(it).delete()
             }
+            if (task.imagePath?.let { File(it).exists() } == true) task.imagePath?.let {
+                File(it).delete()
+            }
             repository.deleteTask(task)
         }
     }

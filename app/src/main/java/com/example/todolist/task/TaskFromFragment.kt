@@ -226,8 +226,14 @@ class TaskFromFragment : Fragment() {
             binding.nameInput.text = Editable.Factory.getInstance().newEditable(currentTask.name)
             binding.dateInput.text = Editable.Factory.getInstance().newEditable(currentTask.date.format(
                 DateTimeFormatter.ofPattern("dd-MM-yyyy")))
-            //imageUriIntPath = Uri.parse(currentTask.imageUri)
-            //loadImageFromInternalMem(currentTask.imageUri)
+            imageUriIntPath = if (currentTask.imagePath == null) null else Uri.parse(currentTask.imagePath)
+            if (imageUriIntPath != null) {
+                currentTask.imagePath?.let { loadImageFromInternalMem(it) }
+                addRemoveImageButton.text = "REMOVE IMAGE"
+            } else {
+                userImageView.setImageDrawable(null)
+                addRemoveImageButton.text = "ADD IMAGE"
+            }
             binding.checkBox.isChecked = currentTask.flag
             model.updateData(currentTask.voiceRecordPath)
         } else {
@@ -267,7 +273,7 @@ class TaskFromFragment : Fragment() {
                 model.updateData(null)
 
                 //Log.d("ISNULL", imageUriIntPath.toString())
-                //currentTask.imageUri = imageUriIntPath?.path
+                currentTask.imagePath = imageUriIntPath?.path
                 taskViewModel.updateTask(currentTask)
 
                 return true
@@ -294,7 +300,7 @@ class TaskFromFragment : Fragment() {
             }
 
             if (!errors) {
-                taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name,LocalDate.parse(date, sdf), flag, false, LocalDate.now(), audio_path))
+                taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name,LocalDate.parse(date, sdf), flag, false, LocalDate.now(), audio_path, imageUriIntPath?.path))
                 model.updateData(null)
                 return true
             }
