@@ -10,7 +10,7 @@ import com.example.todolist.task.Converters
 import java.time.LocalDate
 
 
-@Database(entities = [Topic::class, Task::class], version = 3, exportSchema = false)
+@Database(entities = [Topic::class, Task::class], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class TodoDatabase:  RoomDatabase() {
 
@@ -33,6 +33,7 @@ abstract class TodoDatabase:  RoomDatabase() {
                     "todo_database"
                 ).addMigrations(MIGRATION_1_2)
                     .addMigrations(MIGRATION_2_3)
+                    .addMigrations(MIGRATION_3_4)
                     .build()
 
                 INSTANCE = instance
@@ -61,6 +62,13 @@ abstract class TodoDatabase:  RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
                     " ALTER TABLE tasks ADD voiceRecordPath VARCHAR(100);")
+            }
+        }
+
+        val MIGRATION_3_4: Migration = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    " ALTER TABLE tasks ADD imagePath VARCHAR(200);")
             }
         }
 
