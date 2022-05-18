@@ -40,6 +40,7 @@
         android:layout_width="334dp"
         android:layout_height="303dp"
         android:layout_gravity="center|fill|center_vertical"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -52,6 +53,7 @@
         android:gravity="center|center_vertical"
         android:text="@string/empty_tasks"
         android:textSize="20sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emptyTasksImage" />
@@ -62,6 +64,7 @@
         android:layout_height="0dp"
         android:layout_marginEnd="16dp"
         android:src="@drawable/arrow2"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/fabAddTask"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emptyTasksText"

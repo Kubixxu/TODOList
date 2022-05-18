@@ -1,22 +1,22 @@
 package com.example.todolist.task
 
 import android.content.Context
+import android.media.MediaPlayer
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.todolist.R
 import com.example.todolist.model.Task
 import com.example.todolist.viewmodel.TaskViewModel
 import kotlinx.android.synthetic.main.tasks_list.view.*
 import kotlinx.android.synthetic.main.topic.view.*
+import java.io.File
 import java.time.format.DateTimeFormatter
 import kotlin.streams.toList
 
@@ -61,14 +61,40 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
 
                 if (currTask.flag) findViewById<ImageView>(R.id.flag).setImageResource(R.drawable.ic_flag_foreground)
                 else findViewById<ImageView>(R.id.flag).setImageDrawable(null)
+                var voice = findViewById<ImageView>(R.id.voice_record)
+                println(currTask.voiceRecordPath)
+                if (!currTask.voiceRecordPath.equals("null") && currTask.voiceRecordPath != null) {
+                    voice.setImageResource(R.drawable.ic_mic_foreground)
+                    voice.setOnClickListener {
+                        playAudio(currTask.voiceRecordPath)
+                    }
+                }
+                else voice.setImageDrawable(null)
+
+
+
                 findViewById<ConstraintLayout>(R.id.task)
                     .setOnLongClickListener {
-                        val action = TasksDirections.actionTasksToTaskForm(currTask)
+                        val action = TasksDirections.actionTasksToTaskForm()
                         action.topicId = staticTopicId
+                        action.currentTask = currTask
                         findNavController().navigate(action)
                         true
                     }
             }
+        }
+    }
+
+    private fun playAudio(audio_file_path: String?) {
+        try {
+            val file = File(audio_file_path)
+
+            val uri = Uri.fromFile(file)
+            val media_player = MediaPlayer.create(context, uri)
+            media_player.start()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

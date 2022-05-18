@@ -17,7 +17,7 @@ import java.time.LocalDate
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class Task (
+data class Task(
     @PrimaryKey(autoGenerate = true)
     var id: Int,
     var topic: Int,
@@ -25,5 +25,6 @@ data class Task (
     var date: LocalDate,
     var flag: Boolean,
     var completed: Boolean,
-    var dateCreation: LocalDate
+    var dateCreation: LocalDate,
+    var voiceRecordPath: String?
 ) : Parcelable
