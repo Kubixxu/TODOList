@@ -1,15 +1,30 @@
 package com.example.todolist.task
 
 import android.os.Build
+import android.R.attr.path
+import android.app.Activity.RESULT_OK
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -21,7 +36,11 @@ import com.example.todolist.databinding.TaskFormBinding
 import com.example.todolist.model.Task
 import com.example.todolist.viewmodel.TaskViewModel
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.android.synthetic.main.icon_with_text.*
+import kotlinx.android.synthetic.main.task_form.*
+import java.io.*
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
@@ -31,12 +50,15 @@ import java.time.format.DateTimeFormatter
 const val REQUEST_CODE = 200
 class TaskFromFragment : Fragment() {
 
+    private var _binding: TaskFormBinding? = null
+    private var imageUri: Uri? = null
+    private var imageUriIntPath: Uri? = null
     private val taskViewModel: TaskViewModel by activityViewModels()
+    private val IMAGE_PICK_CODE = 1000
+    private val PERMISSION_CODE = 1001
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-
-    private var _binding: TaskFormBinding? = null
     private val binding get() = _binding!!
     private lateinit var model: SharedRecordingViewModel
     private var audio_path: String? = null
@@ -70,10 +92,105 @@ class TaskFromFragment : Fragment() {
                 }
                 datePickerFragment.show(supportFragmentManager, "DatePickerFragment")
             }
+            addRemoveImageButton.setOnClickListener {
+                if(userImageView.drawable == null) {
+                    pickupImageFromGallery()
+                } else {
+                    userImageView.setImageDrawable(null)
+                    imageUri = null
+                    imageUriIntPath!!.path?.let { it1 -> deleteImage(it1) }
+                    imageUriIntPath = null
+                    addRemoveImageButton.text = "ADD IMAGE"
+                }
+            }
         }
 
         return binding.root
 
+    }
+    fun pickupImageFromGallery() {
+        //Log.d("INVOKED", (userImageView.drawable == null).toString())
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //Log.d("INVOKED", "onCreateView has been invoked!")
+        //Log.d("INVOKED", "Request code " + requestCode)
+        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
+            //Log.d("INVOKED", "onCreateView has been invoked!")
+            if (data != null) {
+                imageUri = data.data
+                imageUriIntPath = saveImageToInternalMemory(generateImageName("usr_img.jpg"))
+                //Log.d("IMAGE", imageUriIntPath.toString())
+                imageUriIntPath!!.path?.let { loadImageFromInternalMem(it) }
+                addRemoveImageButton.text = "REMOVE IMAGE"
+            }
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            PERMISSION_CODE -> {
+                if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickupImageFromGallery()
+                } else {
+                    val toast = Toast.makeText(requireContext(), "Permission denied!", Toast.LENGTH_SHORT)
+                    toast.show()
+                }
+            }
+        }
+    }
+
+    private fun loadImageFromInternalMem(path: String) {
+        try {
+            val f = File(path)
+            val b = BitmapFactory.decodeStream(FileInputStream(f))
+            userImageView.setImageBitmap(b)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun generateImageName(baseName: String) : String {
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss.SSS")
+        val formatted = current.format(formatter)
+        return formatted + baseName
+    }
+
+    private fun saveImageToInternalMemory(name: String) : Uri {
+        val cw = ContextWrapper(requireContext())
+        val directory: File = cw.getDir("user_images", Context.MODE_PRIVATE)
+        val imgPath = File(directory, name)
+        var fos: FileOutputStream? = null
+        try {
+            fos = FileOutputStream(imgPath)
+            val bitmapImage = ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, imageUri!!))
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            try {
+                fos!!.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return imgPath.toUri()
+    }
+
+    private fun deleteImage(name: String) {
+        val f = File(name)
+        f.delete()
     }
 
 
@@ -82,8 +199,6 @@ class TaskFromFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         var currentTask = arguments?.get("currentTask")
-        println(currentTask)
-        println(arguments?.getInt("topicId"))
 
         binding.nameInput.doOnTextChanged { text, start, before, count ->
             if (text == "")
@@ -111,6 +226,8 @@ class TaskFromFragment : Fragment() {
             binding.nameInput.text = Editable.Factory.getInstance().newEditable(currentTask.name)
             binding.dateInput.text = Editable.Factory.getInstance().newEditable(currentTask.date.format(
                 DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+            //imageUriIntPath = Uri.parse(currentTask.imageUri)
+            //loadImageFromInternalMem(currentTask.imageUri)
             binding.checkBox.isChecked = currentTask.flag
             model.updateData(currentTask.voiceRecordPath)
         } else {
@@ -149,6 +266,8 @@ class TaskFromFragment : Fragment() {
                 currentTask.voiceRecordPath = audio_path
                 model.updateData(null)
 
+                //Log.d("ISNULL", imageUriIntPath.toString())
+                //currentTask.imageUri = imageUriIntPath?.path
                 taskViewModel.updateTask(currentTask)
 
                 return true
@@ -187,5 +306,4 @@ class TaskFromFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
