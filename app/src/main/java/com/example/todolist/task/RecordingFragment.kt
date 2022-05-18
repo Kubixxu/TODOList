@@ -1,12 +1,16 @@
 package com.example.todolist.task
 
 import android.Manifest
+import android.content.Context
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +19,15 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.todolist.R
 import com.example.todolist.databinding.FragmentRecordingBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
+import java.util.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -31,15 +40,9 @@ private const val ARG_PARAM2 = "param2"
  * Use the [RecordingFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RecordingFragment : Fragment() {
+class RecordingFragment : BottomSheetDialogFragment(), Timer.OnTimeTickListener {
 
-    private var permission = arrayOf(android.Manifest.permission.RECORD_AUDIO)
-    private var permissionGranted = false
-    //    private var media_recorder: MediaRecorder = MediaRecorder()
-    private var dirPath = ""
-    private var filename = ""
-    private var isRecording = false
-    private var isStop = false
+    private val AUDIO_FILE_EXTENSION: String = ".mp3"
     private var write_permission = false
     private var read_permission = false
     private var audio_permission = false
@@ -48,29 +51,39 @@ class RecordingFragment : Fragment() {
     private lateinit var media_recorder: MediaRecorder
     private lateinit var media_player: MediaPlayer
     private var audio_dir_path: String? = null
-    private var audio_file_path: String? = null
-    private var audio_file_name: String = "audio1.3gp"
+    private lateinit var audio_file_path: String
+    private lateinit var audio_file_name: String
+    private lateinit var timer: Timer
 
 
     private var recording = false
     private var playing = false
 
-    private var time = 1
-
     private var _binding: FragmentRecordingBinding? = null
     private val binding get() = _binding!!
+    private lateinit var viewModel: SharedRecordingViewModel
+    private lateinit var vibrator: Vibrator
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkPermissions()
+
+        audio_dir_path = getActivity()?.getApplicationContext()?.getExternalFilesDir(Environment.DIRECTORY_MUSIC)
+            .toString()
+        timer = Timer(this)
+//        vibrator = activity?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+//        vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+
         if (write_permission && audio_permission && read_permission) {
-
-            audio_dir_path = getActivity()?.getApplicationContext()?.getExternalFilesDir(Environment.DIRECTORY_MUSIC)
-                .toString()
-            audio_file_path = "$audio_dir_path/$audio_file_name"
-
-            startRecording()
-
+            viewModel = ViewModelProvider(requireActivity()).get(SharedRecordingViewModel::class.java)
+            if (!viewModel.getData().equals("") && viewModel.getData() != null) {
+                audio_file_path = viewModel.getData()!!
+                view.findViewById<LinearLayout>(R.id.stopRecordLayout).visibility = View.VISIBLE
+                view.findViewById<LinearLayout>(R.id.startRecordLayout).visibility = View.GONE
+            } else {
+                startRecording()
+            }
 
             view.findViewById<ImageButton>(R.id.stopRecord).setOnClickListener {
                 stopRecording()
@@ -82,25 +95,28 @@ class RecordingFragment : Fragment() {
                 startPlaying()
             }
 
-//            binding.stopRecord.setOnClickListener {
-//                println("HEEEJ")
-//            }
-
-//            startRecording()
-
-//            binding.playRecord!!.setOnClickListener { _ ->
-////                    startPlaying()
-//            }
-
-//                pause_btn_2!!.setOnClickListener {
-////                    pausePlaying()
-//
-//                    stop_btn_2!!.isEnabled = !playing
-//                }
-
+            view.findViewById<ImageButton>(R.id.deleteRecord).setOnClickListener {
+                if (File(audio_file_path).exists()) File(audio_file_path).delete()
+                viewModel.updateData(null)
+                if (playing) {
+                    stopPlaying()
+                }
+                dismiss()
+            }
+            view.findViewById<ImageButton>(R.id.saveRecord).setOnClickListener {
+                if (playing) {
+                    stopPlaying()
+                }
+                viewModel.updateData(audio_file_path)
+                findNavController().navigateUp()
+            }
         }
-        // Inflate the layout for this fragment
+    }
 
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        if(File(audio_file_path).exists()) File(audio_file_path).delete()
+        viewModel.updateData(null)
     }
 
     override fun onCreateView(
@@ -109,8 +125,6 @@ class RecordingFragment : Fragment() {
     ): View? {
 
         _binding = FragmentRecordingBinding.inflate(inflater, container, false)
-
-
 
         return inflater.inflate(R.layout.fragment_recording, container, false)
     }
@@ -158,8 +172,8 @@ class RecordingFragment : Fragment() {
 
 
     private fun startRecording() {
-        println("djdj")
-        println(audio_file_path)
+        audio_file_name = UUID.randomUUID().toString() + AUDIO_FILE_EXTENSION
+        audio_file_path = "$audio_dir_path/$audio_file_name"
         try {
             media_recorder = MediaRecorder()
             media_recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT)
@@ -171,20 +185,20 @@ class RecordingFragment : Fragment() {
 
             media_recorder.prepare()
             media_recorder.start()
-            Toast.makeText(requireContext(), "Rozpoczęto nagrywanie", Toast.LENGTH_SHORT).show()
+            timer.start()
+            Toast.makeText(requireContext(), "Recording ...", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     private fun stopRecording() {
-        media_recorder.stop();     // stop recording
-        media_recorder.reset();    // set state to idle
-        media_recorder.release();  // release resources back to the system
+        media_recorder.stop()
+        media_recorder.reset()
+        media_recorder.release()
 
         recording = false
-
-        Toast.makeText(requireContext(), "Zakończono nagrywanie", Toast.LENGTH_SHORT).show()
+        timer.stop()
     }
 
     private fun startPlaying() {
@@ -195,17 +209,25 @@ class RecordingFragment : Fragment() {
 
             val file = File(audio_file_path)
 
-            if (file.exists()) {
-                println(file.canRead())
-                val uri = Uri.fromFile(file)
-                media_player = MediaPlayer.create(requireContext(), uri)
-                media_player.setVolume(100F, 100F)
-                media_player.start()
-            }
+            val uri = Uri.fromFile(file)
+            media_player = MediaPlayer.create(requireContext(), uri)
+            media_player.start()
 
-            Toast.makeText(requireContext(), "Rozpoczęto odtwarzanie", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun stopPlaying() {
+        media_player.stop()
+        media_player.release()
+
+        playing = false
+    }
+
+    override fun onTimerTick(duration: String) {
+        println(media_recorder.maxAmplitude)
+//        if (recording)
+            view?.findViewById<WaveformView>(R.id.canvas)?.addAmplitude(media_recorder.maxAmplitude.toFloat())
     }
 }

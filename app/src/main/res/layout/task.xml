@@ -32,11 +32,13 @@
                 android:layout_width="39dp"
                 android:layout_height="59dp"
                 android:layout_marginLeft="15dp"
+                android:clickable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
 
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_check_off_foreground" />
+
 
             <ImageView
                 android:id="@+id/flag"
@@ -45,11 +47,23 @@
                 app:layout_constraintBottom_toBottomOf="parent"
 
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.955"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.551"
                 app:srcCompat="@drawable/ic_flag_foreground" />
+
+            <ImageView
+                android:id="@+id/voice_record"
+                android:layout_width="49dp"
+                android:layout_height="61dp"
+                android:clickable="true"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/flag"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_mic_foreground" />
 
             <TextView
                 android:id="@+id/taskName"

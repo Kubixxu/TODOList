@@ -11,6 +11,7 @@ import com.example.todolist.repository.TaskRepository
 import com.example.todolist.repository.TopicRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 class TaskViewModel(application: Application) : AndroidViewModel(application) {
     val readAllData: LiveData<List<Task>>
@@ -41,6 +42,9 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
     fun deleteTask(task: Task) {
         viewModelScope.launch(Dispatchers.IO) {
+            if (task.voiceRecordPath?.let { File(it).exists() } == true) task.voiceRecordPath?.let {
+                File(it).delete()
+            }
             repository.deleteTask(task)
         }
     }

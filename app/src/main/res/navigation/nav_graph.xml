@@ -74,6 +74,7 @@
         <argument
             android:name="currentTask"
             app:nullable="true"
+            android:defaultValue="@null"
             app:argType="com.example.todolist.model.Task"/>
         <argument
             android:name="topicId"
@@ -86,13 +87,18 @@
             android:id="@+id/action_TaskForm_to_recordingFragment"
             app:destination="@id/recordingFragment" />
     </fragment>
-    <fragment
+    <dialog
         android:id="@+id/recordingFragment"
         android:name="com.example.todolist.task.RecordingFragment"
         android:label="fragment_recording"
         tools:layout="@layout/fragment_recording" >
         <action
             android:id="@+id/action_recordingFragment_to_TaskForm"
-            app:destination="@id/TaskForm" />
-    </fragment>
+            app:destination="@id/TaskForm" >
+            <argument
+                android:name="audio_path"
+                app:argType="string"/>
+        </action>
+    </dialog>
+
 </navigation>

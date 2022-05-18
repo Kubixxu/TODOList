@@ -121,8 +121,9 @@ class Tasks : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.fabAddTask.setOnClickListener {
-            val action = TasksDirections.actionTasksToTaskForm(null)
-            action.topicId = topicId!!
+            val action = TasksDirections.actionTasksToTaskForm()
+            action.currentTask = null
+            action.topicId = topicId
             findNavController().navigate(action)
         }
     }

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/recording_background"
+    android:backgroundTint="#00FFFFFF"
     tools:context=".task.RecordingFragment">
 
     <LinearLayout
         android:id="@+id/stopRecordLayout"
-        android:layout_width="343dp"
-        android:layout_height="136dp"
+        android:layout_width="match_parent"
+        android:layout_height="98dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone"
@@ -21,7 +23,9 @@
             android:id="@+id/playRecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#FFFFFF"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
             app:srcCompat="@drawable/ic_play_foreground" />
 
         <ImageButton
@@ -29,8 +33,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="#FDFDFD"
+            android:backgroundTint="#00FDFDFD"
             android:foregroundTint="#FFFFFF"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
             app:srcCompat="@drawable/ic_delete_foreground" />
 
         <ImageButton
@@ -38,7 +44,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="#FBFBFB"
+            android:backgroundTint="#00FBFBFB"
+            android:scaleX="0.6"
+            android:scaleY="0.8"
             app:srcCompat="@drawable/ic_send_foreground" />
 
     </LinearLayout>
@@ -46,22 +54,30 @@
     <LinearLayout
         android:id="@+id/startRecordLayout"
         android:layout_width="417dp"
-        android:layout_height="141dp"
-        android:gravity="center|center_vertical"
-        android:orientation="vertical"
+        android:layout_height="96dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <com.example.todolist.task.WaveformView
+            android:id="@+id/canvas"
+            android:layout_width="302dp"
+            android:layout_height="200px"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
         <ImageButton
             android:id="@+id/stopRecord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="87dp"
+            android:layout_height="66dp"
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
-            android:backgroundTint="#FFFFFF"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -69,20 +85,5 @@
             app:tint="#2B2B2B"
             tools:ignore="SpeakableTextPresentCheck"
             tools:srcCompat="@drawable/ic_pause_foreground" />
-
     </LinearLayout>
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contextClickable="false"
-        android:longClickable="false"
-        android:text="Button"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startRecordLayout" />
-
 </FrameLayout>

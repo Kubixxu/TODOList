@@ -10,7 +10,7 @@ import com.example.todolist.task.Converters
 import java.time.LocalDate
 
 
-@Database(entities = [Topic::class, Task::class], version = 2, exportSchema = false)
+@Database(entities = [Topic::class, Task::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class TodoDatabase:  RoomDatabase() {
 
@@ -31,7 +31,9 @@ abstract class TodoDatabase:  RoomDatabase() {
                     context.applicationContext,
                     TodoDatabase::class.java,
                     "todo_database"
-                ).addMigrations(MIGRATION_1_2).build()
+                ).addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_2_3)
+                    .build()
 
                 INSTANCE = instance
                 return instance
@@ -52,6 +54,13 @@ abstract class TodoDatabase:  RoomDatabase() {
                             "PRIMARY KEY(id), " +
                             "FOREIGN KEY (topic) REFERENCES topics(id) " +
                             "ON UPDATE NO ACTION ON DELETE CASCADE)");
+            }
+        }
+
+        val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    " ALTER TABLE tasks ADD voiceRecordPath VARCHAR(100);")
             }
         }
 

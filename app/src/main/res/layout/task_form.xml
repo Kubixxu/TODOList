@@ -12,7 +12,7 @@
         android:id="@+id/dateInputLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="76dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="52dp"
         android:text="Prirority flag"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -103,16 +103,20 @@
         app:layout_constraintTop_toBottomOf="@+id/dateInputLayout"
         app:layout_constraintVertical_bias="0.035" />
 
+
     <Button
         android:id="@+id/record"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:text="Add voice record"
+        android:text="VOICE RECORD"
+        app:icon="@drawable/ic_mic_foreground"
+        app:iconPadding="5dp"
+        app:iconSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+        app:layout_constraintTop_toBottomOf="@+id/checkBox"
+        app:layout_constraintVertical_bias="0.132" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

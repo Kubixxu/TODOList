@@ -1,10 +1,7 @@
 package com.example.todolist.task
 
-import android.content.pm.PackageManager
-import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
@@ -13,18 +10,17 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.todolist.R
 import com.example.todolist.databinding.TaskFormBinding
 import com.example.todolist.model.Task
 import com.example.todolist.viewmodel.TaskViewModel
 import com.google.android.material.textfield.TextInputEditText
-import java.io.File
-import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -37,12 +33,13 @@ class TaskFromFragment : Fragment() {
 
     private val taskViewModel: TaskViewModel by activityViewModels()
 
-
     // This property is only valid between onCreateView and
     // onDestroyView.
 
     private var _binding: TaskFormBinding? = null
     private val binding get() = _binding!!
+    private lateinit var model: SharedRecordingViewModel
+    private var audio_path: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +48,11 @@ class TaskFromFragment : Fragment() {
 
         _binding = TaskFormBinding.inflate(inflater, container, false)
 
+        model = ViewModelProvider(requireActivity()).get(SharedRecordingViewModel::class.java)
+        model.audio_path.observe(viewLifecycleOwner, Observer<String?> { dataFromFragment2 ->
+            audio_path = dataFromFragment2
+            println(audio_path)
+        })
         binding.apply {
             dateInput.setOnClickListener {
                 val datePickerFragment = DatePickerFragment()
@@ -80,6 +82,8 @@ class TaskFromFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         var currentTask = arguments?.get("currentTask")
+        println(currentTask)
+        println(arguments?.getInt("topicId"))
 
         binding.nameInput.doOnTextChanged { text, start, before, count ->
             if (text == "")
@@ -108,6 +112,7 @@ class TaskFromFragment : Fragment() {
             binding.dateInput.text = Editable.Factory.getInstance().newEditable(currentTask.date.format(
                 DateTimeFormatter.ofPattern("dd-MM-yyyy")))
             binding.checkBox.isChecked = currentTask.flag
+            model.updateData(currentTask.voiceRecordPath)
         } else {
             binding.floatingActionButton.text = getString(R.string.create)
             binding.floatingActionButton.setOnClickListener {
@@ -141,6 +146,8 @@ class TaskFromFragment : Fragment() {
                 currentTask.name = name
                 currentTask.date = LocalDate.parse(date, sdf)
                 currentTask.flag = flag
+                currentTask.voiceRecordPath = audio_path
+                model.updateData(null)
 
                 taskViewModel.updateTask(currentTask)
 
@@ -168,7 +175,8 @@ class TaskFromFragment : Fragment() {
             }
 
             if (!errors) {
-                taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name,LocalDate.parse(date, sdf), flag, false, LocalDate.now()))
+                taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name,LocalDate.parse(date, sdf), flag, false, LocalDate.now(), audio_path))
+                model.updateData(null)
                 return true
             }
             return false
