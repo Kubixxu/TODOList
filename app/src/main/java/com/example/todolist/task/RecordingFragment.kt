@@ -203,16 +203,22 @@ class RecordingFragment : BottomSheetDialogFragment(), Timer.OnTimeTickListener 
 
     private fun startPlaying() {
         try {
-            media_player = MediaPlayer()
+            if (!playing) {
+                media_player = MediaPlayer()
 
-            playing = true
+                playing = true
 
-            val file = File(audio_file_path)
+                val file = File(audio_file_path)
 
-            val uri = Uri.fromFile(file)
-            media_player = MediaPlayer.create(requireContext(), uri)
-            media_player.start()
+                val uri = Uri.fromFile(file)
+                media_player = MediaPlayer.create(requireContext(), uri)
+                media_player.start()
+                view?.findViewById<ImageButton>(R.id.playRecord)?.setImageResource(R.drawable.ic_pause_foreground)
+                view?.findViewById<ImageButton>(R.id.playRecord)?.setOnClickListener {
+                    playing()
+                }
 
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -223,6 +229,18 @@ class RecordingFragment : BottomSheetDialogFragment(), Timer.OnTimeTickListener 
         media_player.release()
 
         playing = false
+    }
+
+    private fun playing() {
+        if (playing) {
+            media_player.pause()
+            playing = false
+            view?.findViewById<ImageButton>(R.id.playRecord)?.setImageResource(R.drawable.ic_play_foreground)
+        } else {
+            media_player.start()
+            playing = true
+            view?.findViewById<ImageButton>(R.id.playRecord)?.setImageResource(R.drawable.ic_pause_foreground)
+        }
     }
 
     override fun onTimerTick(duration: String) {
