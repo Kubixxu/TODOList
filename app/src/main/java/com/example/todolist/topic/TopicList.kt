@@ -112,6 +112,7 @@ class TopicList : Fragment() {
 
         binding.createTopicFab.setOnClickListener {
             findNavController().navigate(R.id.action_topic_list_to_topic_addition)
+
         }
     }
 

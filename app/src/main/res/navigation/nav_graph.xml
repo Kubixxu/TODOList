@@ -20,7 +20,9 @@
             app:destination="@id/updateTopic" />
         <action
             android:id="@+id/action_TopicList_to_Tasks"
-            app:destination="@id/Tasks" />
+            app:destination="@id/Tasks"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <argument
             android:name="topicId"
             app:argType="integer"
@@ -60,7 +62,9 @@
             app:destination="@id/TaskForm" />
         <action
             android:id="@+id/action_Tasks_to_TopicList"
-            app:destination="@id/TopicList" />
+            app:destination="@id/TopicList"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right" />
         <argument
             android:name="topicId"
             app:argType="integer"

@@ -16,5 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:transitionName="show_full_img_transition"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,7 +11,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.ViewCompat
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
 import com.example.todolist.model.Task
@@ -77,12 +81,16 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                 else voice.setImageDrawable(null)
 
                 if (currTask.imagePath != null) {
-                    loadImageFromInternalMem(currTask.imagePath!!, findViewById<ImageView>(R.id.userSmallImage))
-                    findViewById<ImageView>(R.id.userSmallImage).visibility = View.VISIBLE
-                    findViewById<ImageView>(R.id.userSmallImage).setOnClickListener {
+                    val smallImageIV = findViewById<ImageView>(R.id.userSmallImage)
+                    loadImageFromInternalMem(currTask.imagePath!!, smallImageIV)
+                    smallImageIV.visibility = View.VISIBLE
+                    smallImageIV.setOnClickListener {
+
+                        val extras = FragmentNavigatorExtras(smallImageIV to "show_full_img_transition")
 
                         val action = TasksDirections.actionTasksToImageFullScreen(currTask.imagePath!!)
-                        findNavController().navigate(action)
+                        findNavController().navigate(action, extras)
+
                     }
 
                 } else {
