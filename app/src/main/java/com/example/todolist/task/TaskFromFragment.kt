@@ -68,10 +68,11 @@ class TaskFromFragment : Fragment() {
         var currentTask = arguments?.get("currentTask")
         if (currentTask != null) {
             currentTask = currentTask as Task
-            imageUriDBState = Uri.parse(currentTask.imagePath)
-            val imagePath = imageUriDBState?.path
-            bitmap = imagePath?.let { getBitmapFromPath(it) }
-
+            if (currentTask.imagePath != null) {
+                imageUriDBState = Uri.parse(currentTask.imagePath)
+                val imagePath = imageUriDBState?.path
+                bitmap = imagePath?.let { getBitmapFromPath(it) }
+            }
         } else {
             imageUriDBState = null
         }
