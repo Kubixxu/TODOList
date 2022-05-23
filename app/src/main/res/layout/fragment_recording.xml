@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/recording_background"
+    android:layout_height="100dp"
+    android:background="#002D9C63"
     android:backgroundTint="#00FFFFFF"
+    android:foregroundTint="#00FFFFFF"
     tools:context=".task.RecordingFragment">
 
     <LinearLayout
         android:id="@+id/stopRecordLayout"
         android:layout_width="match_parent"
-        android:layout_height="98dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/recording_background"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone"
@@ -53,8 +55,9 @@
 
     <LinearLayout
         android:id="@+id/startRecordLayout"
-        android:layout_width="417dp"
-        android:layout_height="96dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/recording_background"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="visible"
