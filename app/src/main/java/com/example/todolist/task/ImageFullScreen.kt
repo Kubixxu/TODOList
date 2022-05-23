@@ -3,6 +3,7 @@ package com.example.todolist.task
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.transition.ChangeBounds
+import android.transition.TransitionInflater
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -32,17 +33,17 @@ class ImageFullScreen : Fragment() {
     ): View? {
         _binding = ImageFullScreenBinding.inflate(inflater, container, false)
         loadImageFromInternalMem(args.imgPath, binding.fullScreenImageView)
-        sharedElementEnterTransition = ChangeBounds().apply {
-            duration = 500
+        val trName = "show_full_img_transition" + args.imgPos
+        binding.fullScreenImageView.apply {
+            transitionName = trName
         }
-        sharedElementReturnTransition = ChangeBounds().apply {
-            duration = 500
-        }
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
     }
     private fun loadImageFromInternalMem(path: String, iv: ImageView) {
         try {

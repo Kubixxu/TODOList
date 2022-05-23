@@ -116,6 +116,8 @@
         tools:layout="@layout/image_full_screen">
         <argument android:name="imgPath"
             app:argType="string"/>
+        <argument android:name="imgPos"
+            app:argType="integer"/>
     </fragment>
 
 </navigation>
