@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,27 +64,35 @@ class TaskFromFragment : Fragment() {
     private var audio_path: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var bitmap : Bitmap? = null
         var currentTask = arguments?.get("currentTask")
         if (currentTask != null) {
             currentTask = currentTask as Task
             imageUriDBState = Uri.parse(currentTask.imagePath)
+            val imagePath = imageUriDBState?.path
+            bitmap = imagePath?.let { getBitmapFromPath(it) }
 
         } else {
             imageUriDBState = null
         }
+
         val callback = object : OnBackPressedCallback(true) {
 
             override fun handleOnBackPressed() {
                 if (imageUriDBState == null && userImageView.drawable != null) {
                     imageUriIntPath?.path?.let { deleteImage(it) }
-                } else if (imageUriDBState != null && userImageView.drawable == null) {
-                    imageUri = imageUriDBState
-                    saveImageToInternalMemory(generateImageName("usr_img.jpg"))
+                } else if (imageUriDBState != null && userImageView.drawable == null && bitmap != null) {
+                    //Log.d("IMAGERM", "INVOKED THIS")
+                    val filePath : String = imageUriDBState?.path!!
+                    val lastSlashIndex = filePath.lastIndexOf('/')
+                    val fileName = filePath.substring(lastSlashIndex + 1)
+                    //Log.d("IMAGERM", "INVOKED THIS -> " + fileName)
+                    saveImageToInternalMemory(fileName, bitmap)
                 }
                 findNavController().navigate(R.id.action_TaskForm_to_Tasks)
-//                Log.d("IMAGERM", "INVOKED THIS")
-//                imageUriDBState?.path?.let { Log.d("IMAGERM", it) }
-//                imageUriIntPath?.path?.let { Log.d("IMAGERM", it) }
+                /*Log.d("IMAGERM", "INVOKED THIS")
+                imageUriDBState?.path?.let { Log.d("IMAGERM", it) }
+                imageUriIntPath?.path?.let { Log.d("IMAGERM", it) }*/
             }
 
         }
@@ -177,11 +186,14 @@ class TaskFromFragment : Fragment() {
             }
         }
     }
-
+    private fun getBitmapFromPath(path: String) : Bitmap {
+        val f = File(path)
+        val b = BitmapFactory.decodeStream(FileInputStream(f))
+        return b
+    }
     private fun loadImageFromInternalMem(path: String) {
         try {
-            val f = File(path)
-            val b = BitmapFactory.decodeStream(FileInputStream(f))
+            val b = getBitmapFromPath(path)
             userImageView.setImageBitmap(b)
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
@@ -214,6 +226,25 @@ class TaskFromFragment : Fragment() {
             }
         }
         return imgPath.toUri()
+    }
+
+    private fun saveImageToInternalMemory(name: String, bitmap: Bitmap) {
+        val cw = ContextWrapper(requireContext())
+        val directory: File = cw.getDir("user_images", Context.MODE_PRIVATE)
+        val imgPath = File(directory, name)
+        var fos: FileOutputStream? = null
+        try {
+            fos = FileOutputStream(imgPath)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            try {
+                fos!!.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
     }
 
     private fun deleteImage(name: String) {
@@ -256,6 +287,7 @@ class TaskFromFragment : Fragment() {
             if (imageUriIntPath != null) {
                 currentTask.imagePath?.let { loadImageFromInternalMem(it) }
                 addRemoveImageButton.text = "REMOVE IMAGE"
+                addRemoveImageButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.image_rm_icon_customized, 0,0,0)
             } else {
                 userImageView.setImageDrawable(null)
                 addRemoveImageButton.text = "ADD IMAGE"
