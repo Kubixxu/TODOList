@@ -81,9 +81,9 @@ class TaskFromFragment : Fragment() {
                     saveImageToInternalMemory(generateImageName("usr_img.jpg"))
                 }
                 findNavController().navigate(R.id.action_TaskForm_to_Tasks)
-                Log.d("IMAGERM", "INVOKED THIS")
-                imageUriDBState?.path?.let { Log.d("IMAGERM", it) }
-                imageUriIntPath?.path?.let { Log.d("IMAGERM", it) }
+//                Log.d("IMAGERM", "INVOKED THIS")
+//                imageUriDBState?.path?.let { Log.d("IMAGERM", it) }
+//                imageUriIntPath?.path?.let { Log.d("IMAGERM", it) }
             }
 
         }

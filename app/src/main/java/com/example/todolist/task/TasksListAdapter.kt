@@ -59,6 +59,8 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                     findViewById<TextView>(R.id.date).text = sdf.format(currTask.date)
                     val diff: Long? = currTask.date?.toEpochDay()?.minus(LocalDate.now().toEpochDay())
                     if (diff!! <= 2) findViewById<TextView>(R.id.date).setTextColor(Color.RED)
+                } else {
+                    findViewById<TextView>(R.id.date).layoutParams.height = 0
                 }
                 if (currTask.completed) findViewById<ImageView>(R.id.isDone).setImageResource(R.drawable.ic_check_on_foreground)
                 else findViewById<ImageView>(R.id.isDone).setImageResource(R.drawable.ic_check_off_foreground)
