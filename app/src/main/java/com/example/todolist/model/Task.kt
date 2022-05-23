@@ -22,7 +22,7 @@ data class Task(
     var id: Int,
     var topic: Int,
     var name: String,
-    var date: LocalDate,
+    var date: LocalDate?,
     var flag: Boolean,
     var completed: Boolean,
     var dateCreation: LocalDate,

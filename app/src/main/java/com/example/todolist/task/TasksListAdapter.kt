@@ -2,6 +2,7 @@ package com.example.todolist.task
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
@@ -27,6 +28,8 @@ import kotlinx.android.synthetic.main.topic.view.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.streams.toList
 
@@ -60,7 +63,11 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
             val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             holder.itemView.apply {
                 findViewById<TextView>(R.id.taskName).text = currTask.name
-                findViewById<TextView>(R.id.date).text = sdf.format(currTask.date)
+                if (currTask.date != null) {
+                    findViewById<TextView>(R.id.date).text = sdf.format(currTask.date)
+                    val diff: Long? = currTask.date?.toEpochDay()?.minus(LocalDate.now().toEpochDay())
+                    if (diff!! <= 2) findViewById<TextView>(R.id.date).setTextColor(Color.RED)
+                }
                 if (currTask.completed) findViewById<ImageView>(R.id.isDone).setImageResource(R.drawable.ic_check_on_foreground)
                 else findViewById<ImageView>(R.id.isDone).setImageResource(R.drawable.ic_check_off_foreground)
 
