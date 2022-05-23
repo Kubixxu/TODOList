@@ -3,33 +3,25 @@ package com.example.todolist.task
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.ColorFilter
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.view.ViewCompat
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
 import com.example.todolist.model.Task
-import com.example.todolist.topic.TopicListDirections
 import com.example.todolist.viewmodel.TaskViewModel
-import kotlinx.android.synthetic.main.task_form.*
-import kotlinx.android.synthetic.main.tasks_list.view.*
-import kotlinx.android.synthetic.main.topic.view.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.streams.toList
 
@@ -76,13 +68,16 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                 }
 
                 if (currTask.flag) findViewById<ImageView>(R.id.flag).setImageResource(R.drawable.ic_flag_foreground)
-                else findViewById<ImageView>(R.id.flag).setImageDrawable(null)
+                else {
+                    findViewById<ImageView>(R.id.flag).setImageDrawable(null)
+                    findViewById<ImageView>(R.id.flag).layoutParams.width = 0
+                }
+
                 var voice = findViewById<ImageView>(R.id.voice_record)
-                println(currTask.voiceRecordPath)
                 if (!currTask.voiceRecordPath.equals("null") && currTask.voiceRecordPath != null) {
                     voice.setImageResource(R.drawable.ic_mic_foreground)
                     voice.setOnClickListener {
-                        playAudio(currTask.voiceRecordPath)
+                        playAudio(currTask.voiceRecordPath, voice)
                     }
                 }
                 else voice.setImageDrawable(null)
@@ -117,13 +112,19 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
         }
     }
 
-    private fun playAudio(audio_file_path: String?) {
+    private fun playAudio(audio_file_path: String?, voice: ImageView) {
         try {
             val file = File(audio_file_path)
 
             val uri = Uri.fromFile(file)
             val media_player = MediaPlayer.create(context, uri)
             media_player.start()
+
+            voice.setColorFilter(Color.GRAY)
+
+            media_player.setOnCompletionListener {
+                voice.setColorFilter(Color.BLACK)
+            }
 
         } catch (e: Exception) {
             e.printStackTrace()

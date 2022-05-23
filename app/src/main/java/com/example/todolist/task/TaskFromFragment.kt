@@ -19,6 +19,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.Switch
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import android.widget.Toast
@@ -309,7 +310,7 @@ class TaskFromFragment : Fragment() {
         var errors: Boolean = false
         view.apply {
             val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-            val flag = findViewById<CheckBox>(R.id.checkBox).isChecked
+            val flag = findViewById<Switch>(R.id.checkBox).isChecked
             var name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
             val date = findViewById<TextInputEditText>(R.id.dateInput).text.toString()
             val isVoiceRecord: Boolean = audio_path != null && !audio_path.equals("")
@@ -355,7 +356,7 @@ class TaskFromFragment : Fragment() {
         var errors: Boolean = false
         view.apply {
             val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-            val flag = findViewById<CheckBox>(R.id.checkBox).isChecked
+            val flag = findViewById<Switch>(R.id.checkBox).isChecked
             var name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
             val date = findViewById<TextInputEditText>(R.id.dateInput).text.toString()
             var taskDate: LocalDate? = null
