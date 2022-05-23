@@ -24,6 +24,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.net.toUri
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -53,6 +54,7 @@ class TaskFromFragment : Fragment() {
     private var _binding: TaskFormBinding? = null
     private var imageUri: Uri? = null
     private var imageUriIntPath: Uri? = null
+    private var imageUriDBState : Uri? = null
     private val taskViewModel: TaskViewModel by activityViewModels()
     private val IMAGE_PICK_CODE = 1000
     private val PERMISSION_CODE = 1001
@@ -62,7 +64,34 @@ class TaskFromFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var model: SharedRecordingViewModel
     private var audio_path: String? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        var currentTask = arguments?.get("currentTask")
+        if (currentTask != null) {
+            currentTask = currentTask as Task
+            imageUriDBState = Uri.parse(currentTask.imagePath)
 
+        } else {
+            imageUriDBState = null
+        }
+        val callback = object : OnBackPressedCallback(true) {
+
+            override fun handleOnBackPressed() {
+                if (imageUriDBState == null && userImageView.drawable != null) {
+                    imageUriIntPath?.path?.let { deleteImage(it) }
+                } else if (imageUriDBState != null && userImageView.drawable == null) {
+                    imageUri = imageUriDBState
+                    saveImageToInternalMemory(generateImageName("usr_img.jpg"))
+                }
+                findNavController().navigate(R.id.action_TaskForm_to_Tasks)
+                Log.d("IMAGERM", "INVOKED THIS")
+                imageUriDBState?.path?.let { Log.d("IMAGERM", it) }
+                imageUriIntPath?.path?.let { Log.d("IMAGERM", it) }
+            }
+
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -101,6 +130,7 @@ class TaskFromFragment : Fragment() {
                     imageUriIntPath!!.path?.let { it1 -> deleteImage(it1) }
                     imageUriIntPath = null
                     addRemoveImageButton.text = "ADD IMAGE"
+                    addRemoveImageButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.image_add_icon_customized, 0,0,0)
                 }
             }
         }
@@ -126,6 +156,7 @@ class TaskFromFragment : Fragment() {
                 imageUriIntPath = saveImageToInternalMemory(generateImageName("usr_img.jpg"))
                 //Log.d("IMAGE", imageUriIntPath.toString())
                 imageUriIntPath!!.path?.let { loadImageFromInternalMem(it) }
+                addRemoveImageButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.image_rm_icon_customized, 0,0,0)
                 addRemoveImageButton.text = "REMOVE IMAGE"
             }
         }
