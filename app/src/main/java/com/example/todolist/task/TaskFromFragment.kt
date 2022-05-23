@@ -109,6 +109,13 @@ class TaskFromFragment : Fragment() {
         model.audio_path.observe(viewLifecycleOwner, Observer<String?> { dataFromFragment2 ->
             audio_path = dataFromFragment2
             println(audio_path)
+
+            if (model.getData() == null) {
+                record.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mic_none_foreground, 0,0,0)
+            } else {
+                record.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mic_foreground, 0,0,0)
+            }
+
         })
         binding.apply {
             dateInput.setOnClickListener {

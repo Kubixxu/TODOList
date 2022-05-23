@@ -67,10 +67,10 @@
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="Priority flag"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateInputLayout" />
 
@@ -92,25 +92,28 @@
 
     <Button
         android:id="@+id/record"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="190dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="16dp"
+        android:drawableLeft="@drawable/ic_mic_foreground"
+        android:drawableTint="#FFFFFF"
         android:text="VOICE RECORD"
-        app:icon="@drawable/ic_mic_foreground"
         app:iconPadding="5dp"
         app:iconSize="40dp"
-        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBox" />
 
     <Button
         android:id="@+id/addRemoveImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ADD IMAGE"
-        android:layout_marginTop="10dp"
+        android:layout_width="190dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="16dp"
         android:drawableLeft="@drawable/image_add_icon_customized"
+        android:text="ADD IMAGE"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/record" />
 
@@ -118,11 +121,11 @@
         android:id="@+id/userImageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addRemoveImageButton"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/addRemoveImageButton" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
