@@ -1,7 +1,6 @@
 package com.example.todolist.task
 
 import android.os.Build
-import android.R.attr.path
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.ContextWrapper
@@ -15,12 +14,10 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.SpannableStringBuilder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import android.widget.Toast
@@ -37,7 +34,6 @@ import com.example.todolist.databinding.TaskFormBinding
 import com.example.todolist.model.Task
 import com.example.todolist.viewmodel.TaskViewModel
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.icon_with_text.*
 import kotlinx.android.synthetic.main.task_form.*
 import java.io.*
 import java.time.LocalDate
@@ -238,12 +234,6 @@ class TaskFromFragment : Fragment() {
                 binding.nameErrorText.visibility = View.GONE
         }
 
-        binding.dateInput.doOnTextChanged { text, start, before, count ->
-            if (text == "")
-                binding.dateErrorText.visibility = View.VISIBLE
-            else
-                binding.dateErrorText.visibility = View.GONE
-        }
 
         if (currentTask != null) {
             currentTask = currentTask as Task
@@ -255,8 +245,12 @@ class TaskFromFragment : Fragment() {
             binding.floatingActionButton.icon = resources.getDrawable(R.drawable.ic_edit_foreground)
 
             binding.nameInput.text = Editable.Factory.getInstance().newEditable(currentTask.name)
-            binding.dateInput.text = Editable.Factory.getInstance().newEditable(currentTask.date.format(
-                DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+
+            if (currentTask.date != null) {
+                binding.dateInput.text = Editable.Factory.getInstance().newEditable(currentTask.date?.format(
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+            }
+
             imageUriIntPath = if (currentTask.imagePath == null) null else Uri.parse(currentTask.imagePath)
             if (imageUriIntPath != null) {
                 currentTask.imagePath?.let { loadImageFromInternalMem(it) }
@@ -284,26 +278,38 @@ class TaskFromFragment : Fragment() {
         view.apply {
             val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             val flag = findViewById<CheckBox>(R.id.checkBox).isChecked
-            val name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
+            var name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
             val date = findViewById<TextInputEditText>(R.id.dateInput).text.toString()
-            if (name == "") {
-                findViewById<TextView>(R.id.nameErrorText).visibility = View.VISIBLE
-                errors = true
-            }
+            val isVoiceRecord: Boolean = audio_path != null && !audio_path.equals("")
+            var taskDate: LocalDate? = null
 
-            if (date == "") {
-                findViewById<TextView>(R.id.dateErrorText).visibility = View.VISIBLE
-                errors = true
+            if (isVoiceRecord) {
+                if (date == "") {
+                    taskDate = null
+                } else {
+                    taskDate = LocalDate.parse(date, sdf)
+                }
+                if (name == "") {
+                    name =  "Voice record"
+                }
+            } else {
+                if (date == "") {
+                    taskDate = null
+                } else {
+                    taskDate = LocalDate.parse(date, sdf)
+                }
+                if (name == "") {
+                    findViewById<TextView>(R.id.nameErrorText).visibility = View.VISIBLE
+                    errors = true
+                }
             }
 
             if (!errors) {
                 currentTask.name = name
-                currentTask.date = LocalDate.parse(date, sdf)
+                currentTask.date = taskDate
                 currentTask.flag = flag
                 currentTask.voiceRecordPath = audio_path
                 model.updateData(null)
-
-                //Log.d("ISNULL", imageUriIntPath.toString())
                 currentTask.imagePath = imageUriIntPath?.path
                 taskViewModel.updateTask(currentTask)
 
@@ -318,26 +324,42 @@ class TaskFromFragment : Fragment() {
         view.apply {
             val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             val flag = findViewById<CheckBox>(R.id.checkBox).isChecked
-            val name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
+            var name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
             val date = findViewById<TextInputEditText>(R.id.dateInput).text.toString()
-            if (name == "") {
-                findViewById<TextView>(R.id.nameErrorText).visibility = View.VISIBLE
-                errors = true
+            var taskDate: LocalDate? = null
+            val isVoiceRecord: Boolean = audio_path != null && !audio_path.equals("")
+
+            if (isVoiceRecord) {
+                if (date == "") {
+                    taskDate = null
+                } else {
+                    taskDate = LocalDate.parse(date, sdf)
+                }
+                if (name == "") {
+                    name =  "Voice record"
+                }
+            } else {
+                if (date == "") {
+                    taskDate = null
+                } else {
+                    taskDate = LocalDate.parse(date, sdf)
+                }
+                if (name == "") {
+                    findViewById<TextView>(R.id.nameErrorText).visibility = View.VISIBLE
+                    errors = true
+                }
             }
 
-            if (date == "") {
-                findViewById<TextView>(R.id.dateErrorText).visibility = View.VISIBLE
-                errors = true
-            }
 
             if (!errors) {
-                taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name,LocalDate.parse(date, sdf), flag, false, LocalDate.now(), audio_path, imageUriIntPath?.path))
+                taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name, taskDate, flag, false, LocalDate.now(), audio_path, imageUriIntPath?.path))
                 model.updateData(null)
                 return true
             }
             return false
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

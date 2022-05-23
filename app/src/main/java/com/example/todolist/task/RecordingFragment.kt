@@ -1,9 +1,12 @@
 package com.example.todolist.task
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
@@ -64,6 +67,18 @@ class RecordingFragment : BottomSheetDialogFragment(), Timer.OnTimeTickListener 
     private lateinit var viewModel: SharedRecordingViewModel
     private lateinit var vibrator: Vibrator
 
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+
+        dialog.setOnShowListener {
+            //this line transparent your dialog background
+            (view?.parent as ViewGroup).background =
+                ColorDrawable(Color.TRANSPARENT)
+        }
+
+        return dialog
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -216,6 +231,11 @@ class RecordingFragment : BottomSheetDialogFragment(), Timer.OnTimeTickListener 
                 view?.findViewById<ImageButton>(R.id.playRecord)?.setImageResource(R.drawable.ic_pause_foreground)
                 view?.findViewById<ImageButton>(R.id.playRecord)?.setOnClickListener {
                     playing()
+                }
+
+                media_player.setOnCompletionListener {
+                    view?.findViewById<ImageButton>(R.id.playRecord)?.setImageResource(R.drawable.ic_play_foreground)
+                    playing = false
                 }
 
             }

@@ -10,7 +10,7 @@ import com.example.todolist.task.Converters
 import java.time.LocalDate
 
 
-@Database(entities = [Topic::class, Task::class], version = 4, exportSchema = false)
+@Database(entities = [Topic::class, Task::class], version = 5, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class TodoDatabase:  RoomDatabase() {
 
@@ -34,6 +34,7 @@ abstract class TodoDatabase:  RoomDatabase() {
                 ).addMigrations(MIGRATION_1_2)
                     .addMigrations(MIGRATION_2_3)
                     .addMigrations(MIGRATION_3_4)
+                    .addMigrations(MIGRATION_4_5)
                     .build()
 
                 INSTANCE = instance
@@ -69,6 +70,27 @@ abstract class TodoDatabase:  RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
                     " ALTER TABLE tasks ADD imagePath VARCHAR(200);")
+            }
+        }
+
+        val MIGRATION_4_5: Migration = object : Migration(4, 5) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    " CREATE TABLE IF NOT EXISTS tasks_temporary " +
+                            "(id INTEGER NOT NULL, " +
+                            "topic INTEGER NOT NULL," +
+                            "name TEXT NOT NULL," +
+                            "date INTEGER, " +
+                            "flag INTEGER NOT NULL," +
+                            "completed INTEGER NOT NULL," +
+                            "dateCreation INTEGER NOT NULL, " +
+                            "imagePath VARCHAR(200), " +
+                            "voiceRecordPath VARCHAR(100), " +
+                            "PRIMARY KEY(id), " +
+                            "FOREIGN KEY (topic) REFERENCES topics(id) " +
+                            "ON UPDATE NO ACTION ON DELETE CASCADE)")
+                database.execSQL("DROP TABLE tasks")
+                database.execSQL("ALTER TABLE tasks_temporary RENAME TO tasks")
             }
         }
 

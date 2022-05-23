@@ -101,10 +101,12 @@
         tools:layout="@layout/fragment_recording" >
         <action
             android:id="@+id/action_recordingFragment_to_TaskForm"
-            app:destination="@id/TaskForm" >
+            app:destination="@id/TaskForm"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/slide_out_bottom">
             <argument
                 android:name="audio_path"
-                app:argType="string"/>
+                app:argType="string" />
         </action>
     </dialog>
     <fragment
