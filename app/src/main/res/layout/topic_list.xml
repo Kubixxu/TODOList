@@ -35,16 +35,28 @@
         app:srcCompat="@android:drawable/ic_input_add"
         app:tint="@color/white" />
 
-    <ImageView
+<!--    <ImageView-->
+<!--        android:id="@+id/empty_list_img"-->
+<!--        android:layout_width="334dp"-->
+<!--        android:layout_height="303dp"-->
+<!--        android:layout_gravity="center|fill|center_vertical"-->
+<!--        android:src="@drawable/empty_img"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:visibility="gone"/>-->
+
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/empty_list_img"
         android:layout_width="334dp"
         android:layout_height="303dp"
-        android:layout_gravity="center|fill|center_vertical"
-        android:src="@drawable/empty_img"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintVertical_bias="0.0"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/todo"/>
 
     <TextView
         android:id="@+id/empty_textView1"
