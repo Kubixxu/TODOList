@@ -101,18 +101,24 @@
                     app:layout_constraintVertical_bias="0.0"
                     app:lottie_rawRes="@raw/mic" />
 
-                <com.airbnb.lottie.LottieAnimationView
+                <ImageView
                     android:id="@+id/flag"
-                    android:layout_width="49dp"
-                    android:layout_height="61dp"
-                    android:scaleX="0.5"
-                    android:scaleY="0.5"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:lottie_autoPlay="true"
-                    app:lottie_rawRes="@raw/flag" />
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/flag" />
+                <!--                <com.airbnb.lottie.LottieAnimationView-->
+<!--                    android:id="@+id/flag"-->
+<!--                    android:layout_width="49dp"-->
+<!--                    android:layout_height="61dp"-->
+<!--                    android:scaleX="0.5"-->
+<!--                    android:scaleY="0.5"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    app:layout_constraintVertical_bias="0.0"-->
+<!--                    app:lottie_autoPlay="true"-->
+<!--                    app:lottie_rawRes="@raw/flag" />-->
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

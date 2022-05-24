@@ -35,6 +35,7 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     var tasks: List<DataObject> = emptyList()
+    var media_player: MediaPlayer? = null
 
     companion object {
         var staticTopicId = 0
@@ -70,10 +71,10 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
 
                 isDone.setOnClickListener {
                     if (!tasks[position].task.completed) {
-                        isDone.speed = 1f
+                        isDone.speed = 2f
                         isDone.playAnimation()
                     } else {
-                        isDone.speed = -1f
+                        isDone.speed = -2f
                         isDone.playAnimation()
                     }
                     currTask.completed = !currTask.completed
@@ -96,11 +97,11 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
 
                 if (currTask.completed) isDone.progress = 1f else isDone.progress = 0f
 
-                if (!currTask.flag) findViewById<LottieAnimationView>(R.id.flag).visibility = View.GONE
+                if (!currTask.flag) findViewById<ImageView>(R.id.flag).visibility = View.GONE
                 else {
-                    findViewById<LottieAnimationView>(R.id.flag).visibility = View.VISIBLE
-                    findViewById<LottieAnimationView>(R.id.flag).loop(true)
-                    findViewById<LottieAnimationView>(R.id.flag).playAnimation()
+                    findViewById<ImageView>(R.id.flag).visibility = View.VISIBLE
+//                    findViewById<LottieAnimationView>(R.id.flag).loop(true)
+//                    findViewById<LottieAnimationView>(R.id.flag).playAnimation()
                 }
 
                 var voice = findViewById<LottieAnimationView>(R.id.voice_record)
@@ -148,13 +149,13 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
             val file = File(audio_file_path)
 
             val uri = Uri.fromFile(file)
-            val media_player = MediaPlayer.create(context, uri)
-            media_player.start()
+            media_player = MediaPlayer.create(context, uri)
+            media_player?.start()
 
             voice.loop(true)
             voice.playAnimation()
 
-            media_player.setOnCompletionListener {
+            media_player?.setOnCompletionListener {
                 voice.cancelAnimation()
                 voice.frame = 0
             }
