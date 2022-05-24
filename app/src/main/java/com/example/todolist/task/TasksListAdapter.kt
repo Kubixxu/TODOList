@@ -1,5 +1,7 @@
 package com.example.todolist.task
 
+import android.animation.Animator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -15,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.example.todolist.R
 import com.example.todolist.model.Task
 import com.example.todolist.viewmodel.TaskViewModel
@@ -47,7 +50,7 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
         return TaskViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TaskViewHolder, @SuppressLint("RecyclerView") position: Int) {
         staticTopicId = topicId!!
         var data = tasks[position]
         if (!data.isHeader) {
@@ -62,27 +65,52 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                 } else {
                     findViewById<TextView>(R.id.date).layoutParams.height = 0
                 }
-                if (currTask.completed) findViewById<ImageView>(R.id.isDone).setImageResource(R.drawable.ic_check_on_foreground)
-                else findViewById<ImageView>(R.id.isDone).setImageResource(R.drawable.ic_check_off_foreground)
 
-                findViewById<ImageView>(R.id.isDone).setOnClickListener {
-                    setCompletion(position)
+                val isDone: LottieAnimationView = findViewById<LottieAnimationView>(R.id.isDone)
+
+                isDone.setOnClickListener {
+                    if (!tasks[position].task.completed) {
+                        isDone.speed = 1f
+                        isDone.playAnimation()
+                    } else {
+                        isDone.speed = -1f
+                        isDone.playAnimation()
+                    }
+                    currTask.completed = !currTask.completed
+                    isDone.addAnimatorListener(object: Animator.AnimatorListener {
+                        override fun onAnimationStart(animation: Animator?) {
+                        }
+
+                        override fun onAnimationEnd(animation: Animator?) {
+                            taskViewModel.updateTask(currTask)
+                        }
+
+                        override fun onAnimationCancel(animation: Animator?) {
+                        }
+
+                        override fun onAnimationRepeat(animation: Animator?) {
+                        }
+
+                    })
                 }
 
-                if (currTask.flag) findViewById<ImageView>(R.id.flag).setImageResource(R.drawable.ic_flag_foreground)
+                if (currTask.completed) isDone.progress = 1f else isDone.progress = 0f
+
+                if (!currTask.flag) findViewById<LottieAnimationView>(R.id.flag).visibility = View.GONE
                 else {
-                    findViewById<ImageView>(R.id.flag).setImageDrawable(null)
-                    findViewById<ImageView>(R.id.flag).layoutParams.width = 0
+                    findViewById<LottieAnimationView>(R.id.flag).visibility = View.VISIBLE
+                    findViewById<LottieAnimationView>(R.id.flag).loop(true)
+                    findViewById<LottieAnimationView>(R.id.flag).playAnimation()
                 }
 
-                var voice = findViewById<ImageView>(R.id.voice_record)
+                var voice = findViewById<LottieAnimationView>(R.id.voice_record)
                 if (!currTask.voiceRecordPath.equals("null") && currTask.voiceRecordPath != null) {
-                    voice.setImageResource(R.drawable.ic_mic_foreground)
+                    voice.visibility = View.VISIBLE
                     voice.setOnClickListener {
                         playAudio(currTask.voiceRecordPath, voice)
                     }
                 }
-                else voice.setImageDrawable(null)
+                else voice.visibility = View.GONE
 
                 if (currTask.imagePath != null) {
                     val smallImageIV = findViewById<ImageView>(R.id.userSmallImage)
@@ -114,7 +142,7 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
         }
     }
 
-    private fun playAudio(audio_file_path: String?, voice: ImageView) {
+    private fun playAudio(audio_file_path: String?, voice: LottieAnimationView) {
         try {
             val file = File(audio_file_path)
 
@@ -122,10 +150,12 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
             val media_player = MediaPlayer.create(context, uri)
             media_player.start()
 
-            voice.setColorFilter(Color.GRAY)
+            voice.loop(true)
+            voice.playAnimation()
 
             media_player.setOnCompletionListener {
-                voice.setColorFilter(Color.BLACK)
+                voice.cancelAnimation()
+                voice.frame = 0
             }
 
         } catch (e: Exception) {

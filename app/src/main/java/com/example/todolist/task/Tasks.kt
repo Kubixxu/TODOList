@@ -87,30 +87,6 @@ class Tasks : Fragment() {
         return binding.root
     }
 
-//    override fun onDetach() {
-//        super.onDetach()
-//        val action = TasksDirections.actionTasksToTopicList()
-//        findNavController().navigate(action)
-//    }
-
-//    fun onBackPressed(): Boolean {
-//        val action = TasksDirections.actionTasksToTopicList()
-//        findNavController().navigate(action)
-//        return false
-//    }
-
-//    override fun onResume() {
-//        super.onResume()
-//        view?.setOnKeyListener { v, keyCode, event ->
-//            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-//                val action = TasksDirections.actionTasksToTopicList()
-//                findNavController().navigate(action)
-//                return@setOnKeyListener true
-//            }
-//            return@setOnKeyListener false
-//        }
-//    }
-
     private fun prepareTaskList() {
         val recyclerView : RecyclerView = binding.root.findViewById(R.id.tasksList)
         val emptyImage : ImageView = binding.root.findViewById(R.id.emptyTasksImage)

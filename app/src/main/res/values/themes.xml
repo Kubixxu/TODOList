@@ -23,4 +23,12 @@
    <style name="Theme.TODOList.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
    <style name="Theme.TODOList.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="FullScreen" parent="Theme.TODOList">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
 </resources>
