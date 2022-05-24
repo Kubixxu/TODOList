@@ -59,16 +59,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emptyTasksImage" />
 
-    <ImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/empty_point_arrow2_topic"
         android:layout_width="145dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/arrow2"
+        android:layout_marginEnd="60dp"
+        android:rotation="-90"
+        android:rotationY="182"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/fabAddTask"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emptyTasksText"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/arrow" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
