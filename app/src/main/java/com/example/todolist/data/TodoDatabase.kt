@@ -7,7 +7,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.todolist.model.Task
 import com.example.todolist.model.Topic
 import com.example.todolist.task.Converters
-import java.time.LocalDate
 
 
 @Database(entities = [Topic::class, Task::class], version = 5, exportSchema = false)
@@ -42,7 +41,7 @@ abstract class TodoDatabase:  RoomDatabase() {
             }
         }
 
-        val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+        private val MIGRATION_1_2: Migration = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
                     " CREATE TABLE IF NOT EXISTS tasks " +
@@ -55,25 +54,25 @@ abstract class TodoDatabase:  RoomDatabase() {
                             "dateCreation INTEGER NOT NULL, " +
                             "PRIMARY KEY(id), " +
                             "FOREIGN KEY (topic) REFERENCES topics(id) " +
-                            "ON UPDATE NO ACTION ON DELETE CASCADE)");
+                            "ON UPDATE NO ACTION ON DELETE CASCADE)")
             }
         }
 
-        val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+        private val MIGRATION_2_3: Migration = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
                     " ALTER TABLE tasks ADD voiceRecordPath VARCHAR(100);")
             }
         }
 
-        val MIGRATION_3_4: Migration = object : Migration(3, 4) {
+        private val MIGRATION_3_4: Migration = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
                     " ALTER TABLE tasks ADD imagePath VARCHAR(200);")
             }
         }
 
-        val MIGRATION_4_5: Migration = object : Migration(4, 5) {
+        private val MIGRATION_4_5: Migration = object : Migration(4, 5) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
                     " CREATE TABLE IF NOT EXISTS tasks_temporary " +
@@ -93,13 +92,5 @@ abstract class TodoDatabase:  RoomDatabase() {
                 database.execSQL("ALTER TABLE tasks_temporary RENAME TO tasks")
             }
         }
-
-//        var id: Int,
-//        var topic: Int,
-//        var name: String,
-//        var date: LocalDate,
-//        var flag: Boolean,
-//        var completed: Boolean,
-//        var dateCreation: LocalDate
     }
 }

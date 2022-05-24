@@ -10,23 +10,22 @@ import android.widget.TextView
 import com.example.todolist.R
 
 
-class IconAdapter(context: Context, resource: Int, val icons: Array<Int>, val texts: Array<String>) : ArrayAdapter<Int>(context, resource, icons) {
+class IconAdapter(context: Context, resource: Int, private val icons: Array<Int>, private val texts: Array<String>) : ArrayAdapter<Int>(context, resource, icons) {
     override fun getDropDownView(
         position: Int,
         convertView: View?,
         parent: ViewGroup
     ): View {
-        return getCustomView(position, convertView, parent)
+        return getCustomView(position, parent)
     }
 
 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return getCustomView(position, convertView, parent)
+        return getCustomView(position, parent)
     }
 
-    // Function to return our custom View (View with an image and text)
-    fun getCustomView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    private fun getCustomView(position: Int, parent: ViewGroup?): View {
 
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val row: View = inflater.inflate(R.layout.icon_with_text, parent, false)

@@ -1,17 +1,16 @@
 package com.example.todolist.topic
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
-import com.example.todolist.topic.TopicListDirections
 import com.example.todolist.model.Topic
 import kotlinx.android.synthetic.main.topic.view.*
 
-class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
+class TopicAdapter : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
 
     var topics: List<Pair<Topic, Int>> = emptyList()
     class TopicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -44,7 +43,6 @@ class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
                 action.topicId = currTopic.id
                 findNavController().navigate(action)
             }
-            println( "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + currTopic.id)
         }
     }
 
@@ -52,15 +50,9 @@ class TopicAdapter() : RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
         return topics.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(topicsList: List<Pair<Topic, Int>>){
         this.topics = topicsList
-        //Log.d("INVOKED", "setData has been invoked!")
-        //Log.d("INVOKED", "Given list: " + topicsList)
         notifyDataSetChanged()
     }
-
-    fun itemDeleted(pos: Int) {
-        //topics.remo
-    }
-
 }

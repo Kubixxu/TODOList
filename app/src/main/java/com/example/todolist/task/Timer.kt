@@ -2,7 +2,6 @@ package com.example.todolist.task
 
 import android.os.Handler
 import android.os.Looper
-import java.time.Duration
 
 class Timer(listener: OnTimeTickListener) {
 
@@ -25,10 +24,6 @@ class Timer(listener: OnTimeTickListener) {
     }
     fun start() {
         handler.postDelayed(runnable, delay)
-    }
-
-    private fun pause() {
-        handler.removeCallbacks(runnable)
     }
 
     fun stop() {

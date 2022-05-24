@@ -100,7 +100,7 @@ class TopicList : Fragment() {
 
         recyclerView.adapter = topicListAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
-        var itemTouchHelper = ItemTouchHelper(SwipeToDeleteTopic(topicListAdapter, this))
+        var itemTouchHelper = ItemTouchHelper(SwipeToDeleteTopic(this))
         itemTouchHelper.attachToRecyclerView(recyclerView)
         //Log.d("INVOKED", "onCreateView has been invoked!")
         return binding.root

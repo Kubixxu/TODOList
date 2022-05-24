@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.media.MediaPlayer
 import android.net.Uri
 import android.view.LayoutInflater
@@ -35,7 +34,7 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     var tasks: List<DataObject> = emptyList()
-    var media_player: MediaPlayer? = null
+    private var mediaPlayer: MediaPlayer? = null
 
     companion object {
         var staticTopicId = 0
@@ -51,17 +50,15 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
         return TaskViewHolder(view)
     }
 
+    @SuppressLint("CutPasteId")
     override fun onBindViewHolder(holder: TaskViewHolder, @SuppressLint("RecyclerView") position: Int) {
-        print("UPDATEEED")
         staticTopicId = topicId!!
-        var data = tasks[position]
+        val data = tasks[position]
         if (!data.isHeader) {
             val currTask = tasks[position].task
             val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             holder.itemView.apply {
-
-                val isDone: LottieAnimationView = findViewById<LottieAnimationView>(R.id.isDone)
-
+                val isDone: LottieAnimationView = findViewById(R.id.isDone)
                 isDone.setOnClickListener {
                     if (!tasks[position].task.completed) {
                         isDone.speed = 2f
@@ -97,7 +94,7 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                     findViewById<TextView>(R.id.date).text = sdf.format(currTask.date)
                     val diff: Long? = currTask.date?.toEpochDay()?.minus(LocalDate.now().toEpochDay())
                     if (diff!! <= 2) findViewById<TextView>(R.id.date).setTextColor(Color.RED)
-                    else findViewById<TextView>(R.id.date).setTextColor(resources.getColor(R.color.date_color));
+                    else findViewById<TextView>(R.id.date).setTextColor(resources.getColor(R.color.date_color))
                 } else {
                     findViewById<TextView>(R.id.date).visibility = View.GONE
                 }
@@ -107,7 +104,7 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                     findViewById<ImageView>(R.id.flag).visibility = View.VISIBLE
                 }
 
-                var voice = findViewById<LottieAnimationView>(R.id.voice_record)
+                val voice = findViewById<LottieAnimationView>(R.id.voice_record)
                 if (!currTask.voiceRecordPath.equals("null") && currTask.voiceRecordPath != null) {
                     voice.visibility = View.VISIBLE
                     voice.setOnClickListener {
@@ -155,16 +152,16 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
 
     private fun playAudio(audio_file_path: String?, voice: LottieAnimationView) {
         try {
-            val file = File(audio_file_path)
+            val file = audio_file_path?.let { File(it) }
 
             val uri = Uri.fromFile(file)
-            media_player = MediaPlayer.create(context, uri)
-            media_player?.start()
+            mediaPlayer = MediaPlayer.create(context, uri)
+            mediaPlayer?.start()
 
             voice.loop(true)
             voice.playAnimation()
 
-            media_player?.setOnCompletionListener {
+            mediaPlayer?.setOnCompletionListener {
                 voice.cancelAnimation()
                 voice.frame = 0
             }
@@ -178,15 +175,9 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
         return tasks.size
     }
 
-
-    private fun setCompletion(position: Int) {
-        tasks[position].task.completed = !tasks[position].task.completed
-        taskViewModel.updateTask(tasks[position].task)
-        notifyItemChanged(position)
-    }
-
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(tasksList: List<Task>){
-        val data: MutableList<DataObject> = mutableListOf<DataObject>()
+        val data: MutableList<DataObject> = mutableListOf()
 
         val uncompletedTasks = tasksList.stream().filter{!it.completed}.toList()
         for (task in uncompletedTasks) {

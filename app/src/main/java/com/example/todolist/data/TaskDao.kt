@@ -3,7 +3,6 @@ package com.example.todolist.data
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.todolist.model.Task
-import com.example.todolist.model.Topic
 
 @Dao
 interface TaskDao {

@@ -1,7 +1,6 @@
 package com.example.todolist.topic
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,11 +28,11 @@ class AddTopic : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentAddTopicBinding.inflate(inflater, container, false)
         spinner = binding.root.findViewById(R.id.colorSpinner)
-        mTopicViewModel = ViewModelProvider(this).get(TopicViewModel::class.java)
+        mTopicViewModel = ViewModelProvider(this)[TopicViewModel::class.java]
         val iconTexts = arrayOf("Icon", "", "", "", "", "", "")
         icons = arrayOf(0,
             R.drawable.school,

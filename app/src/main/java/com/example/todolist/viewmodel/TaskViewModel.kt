@@ -6,9 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.data.TodoDatabase
 import com.example.todolist.model.Task
-import com.example.todolist.model.Topic
 import com.example.todolist.repository.TaskRepository
-import com.example.todolist.repository.TopicRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
@@ -20,12 +18,6 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         val taskDao = TodoDatabase.getDatabase(application).taskDao()
         repository = TaskRepository(taskDao)
         readAllData = repository.readAllData
-    }
-
-    fun readTasksFromTopic(topicId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.readTasksFromTopic(topicId)
-        }
     }
 
     fun addTask(task: Task) {

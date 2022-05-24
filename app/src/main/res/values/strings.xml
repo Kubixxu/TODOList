@@ -21,4 +21,6 @@
     <string name="date_error">Date cannot be empty</string>
     <string name="create">CREATE</string>
     <string name="update">UPDATE</string>
+    <string name="add_image">ADD IMAGE</string>
+    <string name="remove_img">REMOVE IMAGE</string>
 </resources>

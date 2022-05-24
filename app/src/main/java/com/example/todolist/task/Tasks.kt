@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -22,9 +21,6 @@ import com.example.todolist.model.Task
 import com.example.todolist.viewmodel.TaskViewModel
 import kotlin.streams.toList
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class Tasks : Fragment() {
 
     private lateinit var taskListAdapter: TasksListAdapter
@@ -39,51 +35,40 @@ class Tasks : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // This callback will only be called when MyFragment is at least Started.
         val callback = object : OnBackPressedCallback(true) {
-
             override fun handleOnBackPressed() {
                 findNavController().navigate(R.id.action_Tasks_to_TopicList)
             }
-
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         if (arguments?.getInt("topicId") != -1) {
             topicId = arguments?.getInt("topicId")!!
         }
         _binding = TasksListBinding.inflate(inflater, container, false)
 
-
         val recyclerView : RecyclerView = binding.root.findViewById(R.id.tasksList)
         prepareTaskList()
-//
+
         taskListAdapter = TasksListAdapter(context, topicId, taskViewModel)
-//        tasksList.sortBy { it.completed }
         recyclerView.adapter = taskListAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        var itemTouchHelper = ItemTouchHelper(SwipeToDelete(this))
+        val itemTouchHelper = ItemTouchHelper(SwipeToDelete(this))
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
-//        view.focusable = Focusa
-//        getView().requestFocus();
-
-        view?.setOnKeyListener { v, keyCode, event ->
+        view?.setOnKeyListener { _, keyCode, _ ->
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     val action = TasksDirections.actionTasksToTopicList()
                     findNavController().navigate(action)
                 }
             return@setOnKeyListener false
         }
-
         return binding.root
     }
 
@@ -92,9 +77,9 @@ class Tasks : Fragment() {
         val emptyImage : ImageView = binding.root.findViewById(R.id.emptyTasksImage)
         val emptyText1 : TextView = binding.root.findViewById(R.id.emptyTasksText)
         val emptyArrowImg2 : ImageView = binding.root.findViewById(R.id.empty_point_arrow2_topic)
-        taskViewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
-        taskViewModel.readAllData.observe(viewLifecycleOwner, Observer {
-                tasks ->  setTasks(tasks)
+        taskViewModel = ViewModelProvider(this)[TaskViewModel::class.java]
+        taskViewModel.readAllData.observe(viewLifecycleOwner) { tasks ->
+            setTasks(tasks)
             if (tasksList.isEmpty()) {
                 recyclerView.visibility = View.GONE
                 emptyImage.visibility = View.VISIBLE
@@ -106,7 +91,7 @@ class Tasks : Fragment() {
                 emptyText1.visibility = View.GONE
                 emptyArrowImg2.visibility = View.GONE
             }
-        })
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -126,7 +111,6 @@ class Tasks : Fragment() {
 
     }
 
-
     fun deleteTask(position: Int) {
         val builder = AlertDialog.Builder(context)
         builder.setPositiveButton("Yes") {_,_ -> taskViewModel.deleteTask(taskListAdapter.tasks[position].task)}
@@ -138,11 +122,8 @@ class Tasks : Fragment() {
     }
 
     private fun setTasks(tasks: List<Task>) {
-        println(topicId)
-        println(tasks)
-        tasksList = tasks.stream().filter{it.topic == topicId}.toList();
-        println(tasksList)
-        taskListAdapter.setData(tasksList);
+        tasksList = tasks.stream().filter{it.topic == topicId}.toList()
+        taskListAdapter.setData(tasksList)
     }
 
 }

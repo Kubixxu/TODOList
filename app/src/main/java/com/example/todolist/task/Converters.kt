@@ -13,6 +13,6 @@ class Converters {
 
     @TypeConverter
     fun dateToTimestamp(date: LocalDate?): Long? {
-        return date?.atStartOfDay(ZoneId.systemDefault())?.toInstant()?.toEpochMilli();
+        return date?.atStartOfDay(ZoneId.systemDefault())?.toInstant()?.toEpochMilli()
     }
 }

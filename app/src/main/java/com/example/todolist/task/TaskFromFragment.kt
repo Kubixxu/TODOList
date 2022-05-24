@@ -1,5 +1,6 @@
 package com.example.todolist.task
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.app.Activity.RESULT_OK
 import android.content.Context
@@ -14,11 +15,9 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.SpannableStringBuilder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.Switch
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -28,7 +27,6 @@ import androidx.core.net.toUri
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.todolist.R
@@ -43,10 +41,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
-const val REQUEST_CODE = 200
 class TaskFromFragment : Fragment() {
 
     private var _binding: TaskFormBinding? = null
@@ -54,14 +48,12 @@ class TaskFromFragment : Fragment() {
     private var imageUriIntPath: Uri? = null
     private var imageUriDBState : Uri? = null
     private val taskViewModel: TaskViewModel by activityViewModels()
-    private val IMAGE_PICK_CODE = 1000
-    private val PERMISSION_CODE = 1001
+    private val imagePickCode = 1000
+    private val permissionCode = 1001
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var model: SharedRecordingViewModel
-    private var audio_path: String? = null
+    private var audioPath: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,45 +77,48 @@ class TaskFromFragment : Fragment() {
                 if (imageUriDBState == null && userImageView.drawable != null) {
                     imageUriIntPath?.path?.let { deleteImage(it) }
                 } else if (imageUriDBState != null && userImageView.drawable == null && bitmap != null) {
-                    //Log.d("IMAGERM", "INVOKED THIS")
                     val filePath : String = imageUriDBState?.path!!
                     val lastSlashIndex = filePath.lastIndexOf('/')
                     val fileName = filePath.substring(lastSlashIndex + 1)
-                    //Log.d("IMAGERM", "INVOKED THIS -> " + fileName)
                     saveImageToInternalMemory(fileName, bitmap)
                 }
-                if (currentTask == null && audio_path != null && !audio_path.equals("")) {
-                    if (File(audio_path!!).exists()) audio_path?.let { File(it).delete() }
+                if (currentTask == null && audioPath != null && !audioPath.equals("")) {
+                    if (File(audioPath!!).exists()) audioPath?.let { File(it).delete() }
                     model.updateData(null)
                 }
                 findNavController().navigate(R.id.action_TaskForm_to_Tasks)
-                /*Log.d("IMAGERM", "INVOKED THIS")
-                imageUriDBState?.path?.let { Log.d("IMAGERM", it) }
-                imageUriIntPath?.path?.let { Log.d("IMAGERM", it) }*/
             }
-
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = TaskFormBinding.inflate(inflater, container, false)
 
-        model = ViewModelProvider(requireActivity()).get(SharedRecordingViewModel::class.java)
-        model.audio_path.observe(viewLifecycleOwner, Observer<String?> { dataFromFragment2 ->
-            audio_path = dataFromFragment2
-            println(audio_path)
+        model = ViewModelProvider(requireActivity())[SharedRecordingViewModel::class.java]
+        model.audioPath.observe(viewLifecycleOwner) { dataFromFragment2 ->
+            audioPath = dataFromFragment2
 
             if (model.getData() == null) {
-                record.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mic_none_foreground, 0,0,0)
+                record.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_mic_none_foreground,
+                    0,
+                    0,
+                    0
+                )
             } else {
-                record.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mic_foreground, 0,0,0)
+                record.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_mic_foreground,
+                    0,
+                    0,
+                    0
+                )
             }
 
-        })
+        }
         binding.apply {
             dateInput.setOnClickListener {
                 val datePickerFragment = DatePickerFragment()
@@ -149,40 +144,35 @@ class TaskFromFragment : Fragment() {
                     imageUri = null
                     imageUriIntPath!!.path?.let { it1 -> deleteImage(it1) }
                     imageUriIntPath = null
-                    addRemoveImageButton.text = "ADD IMAGE"
+                    addRemoveImageButton.setText(R.string.add_image)
                     addRemoveImageButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.image_add_icon_customized, 0,0,0)
                 }
             }
         }
-
         return binding.root
-
     }
-    fun pickupImageFromGallery() {
-        //Log.d("INVOKED", (userImageView.drawable == null).toString())
+
+    private fun pickupImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        startActivityForResult(intent, IMAGE_PICK_CODE)
-
+        startActivityForResult(intent, imagePickCode)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        //Log.d("INVOKED", "onCreateView has been invoked!")
-        //Log.d("INVOKED", "Request code " + requestCode)
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-            //Log.d("INVOKED", "onCreateView has been invoked!")
+        if (resultCode == RESULT_OK && requestCode == imagePickCode) {
             if (data != null) {
                 imageUri = data.data
                 imageUriIntPath = saveImageToInternalMemory(generateImageName("usr_img.jpg"))
-                //Log.d("IMAGE", imageUriIntPath.toString())
                 imageUriIntPath!!.path?.let { loadImageFromInternalMem(it) }
                 addRemoveImageButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.image_rm_icon_customized, 0,0,0)
-                addRemoveImageButton.text = "REMOVE IMAGE"
+                addRemoveImageButton.setText(R.string.remove_img)
             }
         }
 
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -190,8 +180,8 @@ class TaskFromFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when(requestCode) {
-            PERMISSION_CODE -> {
-                if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            permissionCode -> {
+                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickupImageFromGallery()
                 } else {
                     val toast = Toast.makeText(requireContext(), "Permission denied!", Toast.LENGTH_SHORT)
@@ -200,10 +190,9 @@ class TaskFromFragment : Fragment() {
             }
         }
     }
-    private fun getBitmapFromPath(path: String) : Bitmap {
+    private fun getBitmapFromPath(path: String): Bitmap {
         val f = File(path)
-        val b = BitmapFactory.decodeStream(FileInputStream(f))
-        return b
+        return BitmapFactory.decodeStream(FileInputStream(f))
     }
     private fun loadImageFromInternalMem(path: String) {
         try {
@@ -267,13 +256,14 @@ class TaskFromFragment : Fragment() {
     }
 
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         var currentTask = arguments?.get("currentTask")
 
-        binding.nameInput.doOnTextChanged { text, start, before, count ->
+        binding.nameInput.doOnTextChanged { text, _, _, _ ->
             if (text == "")
                 binding.nameErrorText.visibility = View.VISIBLE
             else
@@ -284,10 +274,10 @@ class TaskFromFragment : Fragment() {
         if (currentTask != null) {
             currentTask = currentTask as Task
             binding.floatingActionButton.setOnClickListener {
-                if (updateTask(view, currentTask!!))
+                if (updateTask(view, currentTask))
                     findNavController().navigate(R.id.action_TaskForm_to_Tasks)
             }
-            binding.floatingActionButton.text = getString(R.string.update)
+            binding.floatingActionButton.setText(R.string.update)
             binding.floatingActionButton.icon = resources.getDrawable(R.drawable.ic_edit_foreground)
 
             binding.nameInput.text = Editable.Factory.getInstance().newEditable(currentTask.name)
@@ -300,11 +290,11 @@ class TaskFromFragment : Fragment() {
             imageUriIntPath = if (currentTask.imagePath == null) null else Uri.parse(currentTask.imagePath)
             if (imageUriIntPath != null) {
                 currentTask.imagePath?.let { loadImageFromInternalMem(it) }
-                addRemoveImageButton.text = "REMOVE IMAGE"
+                addRemoveImageButton.setText(R.string.remove_img)
                 addRemoveImageButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.image_rm_icon_customized, 0,0,0)
             } else {
                 userImageView.setImageDrawable(null)
-                addRemoveImageButton.text = "ADD IMAGE"
+                addRemoveImageButton.setText(R.string.add_image)
             }
             binding.checkBox.isChecked = currentTask.flag
             model.updateData(currentTask.voiceRecordPath)
@@ -321,29 +311,29 @@ class TaskFromFragment : Fragment() {
     }
 
     private fun updateTask(view: View, currentTask: Task): Boolean {
-        var errors: Boolean = false
+        var errors = false
         view.apply {
             val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             val flag = findViewById<Switch>(R.id.checkBox).isChecked
             var name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
             val date = findViewById<TextInputEditText>(R.id.dateInput).text.toString()
-            val isVoiceRecord: Boolean = audio_path != null && !audio_path.equals("")
-            var taskDate: LocalDate? = null
+            val isVoiceRecord: Boolean = audioPath != null && !audioPath.equals("")
+            val taskDate: LocalDate?
 
             if (isVoiceRecord) {
-                if (date == "") {
-                    taskDate = null
+                taskDate = if (date == "") {
+                    null
                 } else {
-                    taskDate = LocalDate.parse(date, sdf)
+                    LocalDate.parse(date, sdf)
                 }
                 if (name == "") {
                     name =  "Voice record"
                 }
             } else {
-                if (date == "") {
-                    taskDate = null
+                taskDate = if (date == "") {
+                    null
                 } else {
-                    taskDate = LocalDate.parse(date, sdf)
+                    LocalDate.parse(date, sdf)
                 }
                 if (name == "") {
                     findViewById<TextView>(R.id.nameErrorText).visibility = View.VISIBLE
@@ -355,7 +345,7 @@ class TaskFromFragment : Fragment() {
                 currentTask.name = name
                 currentTask.date = taskDate
                 currentTask.flag = flag
-                currentTask.voiceRecordPath = audio_path
+                currentTask.voiceRecordPath = audioPath
                 model.updateData(null)
                 currentTask.imagePath = imageUriIntPath?.path
                 taskViewModel.updateTask(currentTask)
@@ -367,29 +357,29 @@ class TaskFromFragment : Fragment() {
     }
 
     private fun addNewTask(view: View): Boolean {
-        var errors: Boolean = false
+        var errors = false
         view.apply {
             val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             val flag = findViewById<Switch>(R.id.checkBox).isChecked
             var name = findViewById<TextInputEditText>(R.id.nameInput).text.toString()
             val date = findViewById<TextInputEditText>(R.id.dateInput).text.toString()
-            var taskDate: LocalDate? = null
-            val isVoiceRecord: Boolean = audio_path != null && !audio_path.equals("")
+            val taskDate: LocalDate?
+            val isVoiceRecord: Boolean = audioPath != null && !audioPath.equals("")
 
             if (isVoiceRecord) {
-                if (date == "") {
-                    taskDate = null
+                taskDate = if (date == "") {
+                    null
                 } else {
-                    taskDate = LocalDate.parse(date, sdf)
+                    LocalDate.parse(date, sdf)
                 }
                 if (name == "") {
                     name =  "Voice record"
                 }
             } else {
-                if (date == "") {
-                    taskDate = null
+                taskDate = if (date == "") {
+                    null
                 } else {
-                    taskDate = LocalDate.parse(date, sdf)
+                    LocalDate.parse(date, sdf)
                 }
                 if (name == "") {
                     findViewById<TextView>(R.id.nameErrorText).visibility = View.VISIBLE
@@ -399,7 +389,7 @@ class TaskFromFragment : Fragment() {
 
 
             if (!errors) {
-                taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name, taskDate, flag, false, LocalDate.now(), audio_path, imageUriIntPath?.path))
+                taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name, taskDate, flag, false, LocalDate.now(), audioPath, imageUriIntPath?.path))
                 model.updateData(null)
                 return true
             }

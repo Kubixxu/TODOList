@@ -2,9 +2,7 @@ package com.example.todolist.repository
 
 import androidx.lifecycle.LiveData
 import com.example.todolist.data.TaskDao
-import com.example.todolist.data.TopicDao
 import com.example.todolist.model.Task
-import com.example.todolist.model.Topic
 
 class TaskRepository(private val taskDao: TaskDao) {
     val readAllData: LiveData<List<Task>> = taskDao.readAllData()
