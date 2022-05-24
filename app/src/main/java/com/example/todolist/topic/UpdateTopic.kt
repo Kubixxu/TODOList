@@ -61,11 +61,13 @@ class UpdateTopic : Fragment() {
             val updatedTopic = Topic(args.currentTopic.id, name, topicImageId)
             mTopicViewModel.updateTopic(updatedTopic)
             findNavController().navigate(R.id.action_topic_update_to_topic_list)
-        } else {
-            val toast = Toast.makeText(context, "You didn't specify topic name or topic icon", Toast.LENGTH_SHORT)
-            toast.show()
         }
-
+        if (name == "") {
+            binding.topicNameErrorTV.visibility = View.VISIBLE
+        }
+        if (spinner.selectedItemPosition == 0) {
+            binding.topicIconErrorTV.visibility = View.VISIBLE
+        }
     }
 
 

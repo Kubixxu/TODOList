@@ -14,10 +14,12 @@
 
         <action
             android:id="@+id/action_topic_list_to_topic_addition"
-            app:destination="@id/AddTopic" />
+            app:destination="@id/AddTopic"
+            app:enterAnim="@android:anim/fade_in" />
         <action
             android:id="@+id/action_topic_list_to_topic_update"
-            app:destination="@id/updateTopic" />
+            app:destination="@id/updateTopic"
+            app:enterAnim="@android:anim/fade_in" />
         <action
             android:id="@+id/action_TopicList_to_Tasks"
             app:destination="@id/Tasks"
@@ -36,7 +38,8 @@
 
         <action
             android:id="@+id/action_topic_addition_to_topic_list"
-            app:destination="@id/TopicList" />
+            app:destination="@id/TopicList"
+            app:enterAnim="@android:anim/fade_in" />
     </fragment>
     <fragment
         android:id="@+id/updateTopic"
@@ -44,7 +47,8 @@
         android:label="@string/update_label" >
         <action
             android:id="@+id/action_topic_update_to_topic_list"
-            app:destination="@id/TopicList" />
+            app:destination="@id/TopicList"
+            app:enterAnim="@android:anim/fade_in" />
         <argument
             android:name="currentTopic"
             app:argType="com.example.todolist.model.Topic" />
@@ -59,7 +63,8 @@
         tools:layout="@layout/tasks_list">
         <action
             android:id="@+id/action_Tasks_to_TaskForm"
-            app:destination="@id/TaskForm" />
+            app:destination="@id/TaskForm"
+            app:enterAnim="@android:anim/fade_in" />
         <action
             android:id="@+id/action_Tasks_to_TopicList"
             app:destination="@id/TopicList"
@@ -89,7 +94,8 @@
             app:argType="integer"/>
         <action
             android:id="@+id/action_TaskForm_to_Tasks"
-            app:destination="@id/Tasks" />
+            app:destination="@id/Tasks"
+            app:enterAnim="@android:anim/fade_in" />
         <action
             android:id="@+id/action_TaskForm_to_recordingFragment"
             app:destination="@id/recordingFragment" />
