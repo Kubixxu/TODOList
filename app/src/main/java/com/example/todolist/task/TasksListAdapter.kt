@@ -116,11 +116,12 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                     val smallImageIV = findViewById<ImageView>(R.id.userSmallImage)
                     loadImageFromInternalMem(currTask.imagePath!!, smallImageIV)
                     smallImageIV.visibility = View.VISIBLE
+                    smallImageIV.transitionName = "show_full_img_transition$position"
                     smallImageIV.setOnClickListener {
 
-                        val extras = FragmentNavigatorExtras(smallImageIV to "show_full_img_transition")
+                        val extras = FragmentNavigatorExtras(smallImageIV to smallImageIV.transitionName)
 
-                        val action = TasksDirections.actionTasksToImageFullScreen(currTask.imagePath!!)
+                        val action = TasksDirections.actionTasksToImageFullScreen(currTask.imagePath!!, position)
                         findNavController().navigate(action, extras)
 
                     }
