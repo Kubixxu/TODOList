@@ -264,8 +264,9 @@ class RecordingFragment : BottomSheetDialogFragment(), Timer.OnTimeTickListener 
     }
 
     override fun onTimerTick(duration: String) {
-        println(media_recorder.maxAmplitude)
-//        if (recording)
-            view?.findViewById<WaveformView>(R.id.canvas)?.addAmplitude(media_recorder.maxAmplitude.toFloat())
+        val amp = media_recorder.maxAmplitude.toFloat()
+        if (amp > 0f){
+            view?.findViewById<WaveformView>(R.id.canvas)?.addAmplitude(amp)
+        }
     }
 }
