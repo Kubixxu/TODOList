@@ -55,23 +55,50 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_marginTop="60dp"
-        android:layout_marginLeft="70dp"
-        android:layout_marginRight="70dp"
+        android:id="@+id/textInputLayout"
         android:layout_width="290dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="70dp"
+        android:background="#e4e8e8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextUpdatePersonName"
-        android:background="#e4e8e8">
+        app:layout_constraintTop_toBottomOf="@+id/editTextUpdatePersonName">
 
         <Spinner
             android:id="@+id/colorUpdateSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:popupBackground="#e8e4e4"/>
+            android:popupBackground="#e8e4e4" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/topicNameErrorTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/name_error"
+        android:textColor="#D84040"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextUpdatePersonName" />
+
+    <TextView
+        android:id="@+id/topicIconErrorTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Icon must be chosen"
+        android:textColor="#D84040"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
