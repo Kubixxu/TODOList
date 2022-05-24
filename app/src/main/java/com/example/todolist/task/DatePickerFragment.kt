@@ -2,6 +2,7 @@ package com.example.todolist.task
 
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.DatePicker
 import androidx.fragment.app.DialogFragment
@@ -16,8 +17,14 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        return DatePickerDialog(requireActivity(), this, year, month, day)
+        val datePicker = DatePickerDialog(requireContext(), this, year, month, day)
+        datePicker.setButton(DialogInterface.BUTTON_NEUTRAL, "RESET"
+        ) { _, _ ->
+            val selectedDateBundle = Bundle()
+            selectedDateBundle.putString("SELECTED_DATE", "")
+            setFragmentResult("REQUEST_KEY", selectedDateBundle)
+        }
+        return datePicker
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {

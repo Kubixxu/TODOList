@@ -22,20 +22,6 @@
         app:icon="@drawable/ic_edit_foreground"
         app:iconTint="@color/white"/>
 
-<!--    <EditText-->
-<!--        android:id="@+id/editTextUpdatePersonName"-->
-<!--        android:layout_width="289dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="80dp"-->
-<!--        android:background="@drawable/rounded_edit_text"-->
-
-<!--        android:hint="Topic name"-->
-<!--        android:inputType="textPersonName"-->
-<!--        android:textColor="#878787"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.573"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTextUpdatePersonName"
