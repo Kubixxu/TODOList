@@ -62,6 +62,8 @@ class TaskFromFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var model: SharedRecordingViewModel
     private var audio_path: String? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var bitmap : Bitmap? = null
@@ -89,6 +91,10 @@ class TaskFromFragment : Fragment() {
                     val fileName = filePath.substring(lastSlashIndex + 1)
                     //Log.d("IMAGERM", "INVOKED THIS -> " + fileName)
                     saveImageToInternalMemory(fileName, bitmap)
+                }
+                if (currentTask == null && audio_path != null && !audio_path.equals("")) {
+                    if (File(audio_path!!).exists()) audio_path?.let { File(it).delete() }
+                    model.updateData(null)
                 }
                 findNavController().navigate(R.id.action_TaskForm_to_Tasks)
                 /*Log.d("IMAGERM", "INVOKED THIS")

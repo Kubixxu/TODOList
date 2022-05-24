@@ -15,7 +15,7 @@
         android:layout_marginBottom="15dp"
         android:text="CREATE"
         android:textColor="@color/white"
-        app:backgroundTint="#74CA78"
+        app:backgroundTint="@color/green_base"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"

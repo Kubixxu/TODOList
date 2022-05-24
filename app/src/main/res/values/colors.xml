@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green_top_base">#74CA78</color>
     <color name="green_base">#4BA14F</color>
+    <color name="date_color">#7C7C7C</color>
 </resources>

@@ -55,6 +55,7 @@ class RecordingFragment : BottomSheetDialogFragment(), Timer.OnTimeTickListener 
     private lateinit var media_player: MediaPlayer
     private var audio_dir_path: String? = null
     private lateinit var audio_file_path: String
+    private var first_audio_path: String? = null
     private lateinit var audio_file_name: String
     private lateinit var timer: Timer
 
@@ -94,6 +95,7 @@ class RecordingFragment : BottomSheetDialogFragment(), Timer.OnTimeTickListener 
             viewModel = ViewModelProvider(requireActivity()).get(SharedRecordingViewModel::class.java)
             if (!viewModel.getData().equals("") && viewModel.getData() != null) {
                 audio_file_path = viewModel.getData()!!
+                first_audio_path = audio_file_path
                 view.findViewById<LinearLayout>(R.id.stopRecordLayout).visibility = View.VISIBLE
                 view.findViewById<LinearLayout>(R.id.startRecordLayout).visibility = View.GONE
             } else {
@@ -111,14 +113,19 @@ class RecordingFragment : BottomSheetDialogFragment(), Timer.OnTimeTickListener 
             }
 
             view.findViewById<ImageButton>(R.id.deleteRecord).setOnClickListener {
-                if (File(audio_file_path).exists()) File(audio_file_path).delete()
+                if (!first_audio_path.equals(audio_file_path) && audio_file_name != "")
+                    if (File(audio_file_path).exists()) File(audio_file_path).delete()
                 viewModel.updateData(null)
+                audio_file_path = ""
                 if (playing) {
                     stopPlaying()
                 }
                 dismiss()
             }
             view.findViewById<ImageButton>(R.id.saveRecord).setOnClickListener {
+                if (first_audio_path != null && File(first_audio_path).exists())
+                    File(first_audio_path).delete()
+                first_audio_path = null
                 if (playing) {
                     stopPlaying()
                 }
@@ -128,11 +135,11 @@ class RecordingFragment : BottomSheetDialogFragment(), Timer.OnTimeTickListener 
         }
     }
 
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        if(File(audio_file_path).exists()) File(audio_file_path).delete()
-        viewModel.updateData(null)
-    }
+//    override fun onCancel(dialog: DialogInterface) {
+//        super.onCancel(dialog)
+//        if(File(audio_file_path).exists()) File(audio_file_path).delete()
+//        viewModel.updateData(null)
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

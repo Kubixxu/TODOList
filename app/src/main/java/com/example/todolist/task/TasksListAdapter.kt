@@ -52,20 +52,13 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, @SuppressLint("RecyclerView") position: Int) {
+        print("UPDATEEED")
         staticTopicId = topicId!!
         var data = tasks[position]
         if (!data.isHeader) {
             val currTask = tasks[position].task
             val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             holder.itemView.apply {
-                findViewById<TextView>(R.id.taskName).text = currTask.name
-                if (currTask.date != null) {
-                    findViewById<TextView>(R.id.date).text = sdf.format(currTask.date)
-                    val diff: Long? = currTask.date?.toEpochDay()?.minus(LocalDate.now().toEpochDay())
-                    if (diff!! <= 2) findViewById<TextView>(R.id.date).setTextColor(Color.RED)
-                } else {
-                    findViewById<TextView>(R.id.date).layoutParams.height = 0
-                }
 
                 val isDone: LottieAnimationView = findViewById<LottieAnimationView>(R.id.isDone)
 
@@ -83,7 +76,7 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                         }
 
                         override fun onAnimationEnd(animation: Animator?) {
-                            taskViewModel.updateTask(currTask)
+                            completeTask(currTask)
                         }
 
                         override fun onAnimationCancel(animation: Animator?) {
@@ -92,16 +85,26 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                         override fun onAnimationRepeat(animation: Animator?) {
                         }
 
+
                     })
                 }
 
                 if (currTask.completed) isDone.progress = 1f else isDone.progress = 0f
 
+                findViewById<TextView>(R.id.taskName).text = currTask.name
+                if (currTask.date != null) {
+                    findViewById<TextView>(R.id.date).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.date).text = sdf.format(currTask.date)
+                    val diff: Long? = currTask.date?.toEpochDay()?.minus(LocalDate.now().toEpochDay())
+                    if (diff!! <= 2) findViewById<TextView>(R.id.date).setTextColor(Color.RED)
+                    else findViewById<TextView>(R.id.date).setTextColor(resources.getColor(R.color.date_color));
+                } else {
+                    findViewById<TextView>(R.id.date).visibility = View.GONE
+                }
+
                 if (!currTask.flag) findViewById<ImageView>(R.id.flag).visibility = View.GONE
                 else {
                     findViewById<ImageView>(R.id.flag).visibility = View.VISIBLE
-//                    findViewById<LottieAnimationView>(R.id.flag).loop(true)
-//                    findViewById<LottieAnimationView>(R.id.flag).playAnimation()
                 }
 
                 var voice = findViewById<LottieAnimationView>(R.id.voice_record)
@@ -142,6 +145,12 @@ class TasksListAdapter(private val context: Context?, private var topicId: Int?,
                     }
             }
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun completeTask(currTask: Task) {
+        taskViewModel.updateTask(currTask)
+        notifyDataSetChanged()
     }
 
     private fun playAudio(audio_file_path: String?, voice: LottieAnimationView) {
