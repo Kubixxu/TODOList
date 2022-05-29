@@ -60,16 +60,19 @@ class TodoDatabaseTopicTest {
     fun addValidTopicTest() = runBlocking {
             val topic1 = Topic(0, "Some name", R.drawable.university_hat_icon)
             val topic2 = Topic(0, "Another name", R.drawable.ic_baseline_family_restroom_24)
-            val topic3 = Topic(0, "Some name", R.drawable.ic_baseline_trending_up_24)
-            val topic4 = Topic(0, "Some name", R.drawable.ic_baseline_golf_course_24)
+            val topic3 = Topic(0, "Third name", R.drawable.ic_baseline_trending_up_24)
+            val topic4 = Topic(0, "Fourth name", R.drawable.ic_baseline_golf_course_24)
+            var topicsLD = dao.readAllData()
+            var topicMap = LiveDataTestUtil.getValue(topicsLD)
+            val sizeBfAddition = topicMap.keys.size
             dao.addTopic(topic1)
             dao.addTopic(topic2)
             dao.addTopic(topic3)
             dao.addTopic(topic4)
-            val topicsLD = dao.readAllData()
-            val topicMap = LiveDataTestUtil.getValue(topicsLD)
+            topicsLD = dao.readAllData()
+            topicMap = LiveDataTestUtil.getValue(topicsLD)
             assertNotNull(topicMap)
-            assertEquals(topicMap.keys.size, 4)
+            assertEquals(4, topicMap.keys.size - sizeBfAddition)
             var containsTopic : Boolean
             topicMap.keys.forEach {
                 containsTopic = false
@@ -80,26 +83,103 @@ class TodoDatabaseTopicTest {
     }
 
     @Test
-    fun addInvalidTopicTest() {
-        var validTopic : Topic
-        var topicExistingId : Topic
-        runBlocking {
-            validTopic = Topic(1, "Some name", R.drawable.university_hat_icon)
-            topicExistingId = Topic(1, "Another name", R.drawable.ic_baseline_family_restroom_24)
-            dao.addTopic(validTopic)
-            dao.addTopic(topicExistingId)
+    fun addDoubledTopicTest() = runBlocking {
+
+        val validTopic = Topic(1, "Some name", R.drawable.university_hat_icon)
+        val doubledIdTopic = Topic(1, "Another name", R.drawable.university_hat_icon)
+        var topicsLD = dao.readAllData()
+        var topicMap = LiveDataTestUtil.getValue(topicsLD)
+        val sizeBfAddition = topicMap.keys.size
+        dao.addTopic(validTopic)
+        dao.addTopic(doubledIdTopic)
+        topicsLD = dao.readAllData()
+        topicMap = LiveDataTestUtil.getValue(topicsLD)
+        assertNotNull(topicMap)
+        assertEquals(1, topicMap.keys.size - sizeBfAddition)
+    }
+
+
+    @Test
+    fun updateValidTopicTest() = runBlocking {
+        val topic1 = Topic(0, "Some name", R.drawable.university_hat_icon)
+        val topic2 = Topic(0, "Strange name", R.drawable.ic_baseline_family_restroom_24)
+        var topicsLD = dao.readAllData()
+        var topicMap = LiveDataTestUtil.getValue(topicsLD)
+        val sizeBfAddition = topicMap.keys.size
+        dao.addTopic(topic1)
+        dao.addTopic(topic2)
+        topicsLD = dao.readAllData()
+        topicMap = LiveDataTestUtil.getValue(topicsLD)
+        topicMap.keys.forEach {
+            val updatedTopic = Topic(it.id, "New name", R.drawable.ic_baseline_trending_up_24)
+            dao.updateTopic(updatedTopic)
         }
-
-        GlobalScope.launch {
-            val topics = dao.readAllData()
-            val topicMap = LiveDataTestUtil.getValue(topics)
-            assertNotNull(topicMap)
-            assertEquals(topicMap.keys.size, 4)
-            assertEquals(true, topicMap.keys.contains(validTopic))
-            assertEquals(false, topicMap.keys.contains(topicExistingId))
-
+        topicsLD = dao.readAllData()
+        topicMap = LiveDataTestUtil.getValue(topicsLD)
+        assertEquals(2, topicMap.keys.size - sizeBfAddition)
+        var containsTopic : Boolean
+        topicMap.keys.forEach {
+            containsTopic = it.name == "New name" && it.topicImageId == R.drawable.ic_baseline_trending_up_24
+            assertEquals(true, containsTopic)
         }
     }
+
+    @Test
+    fun updateNonexistentTopicTest() = runBlocking {
+        var topicsLD = dao.readAllData()
+        var topicMap = LiveDataTestUtil.getValue(topicsLD)
+        val sizeBfAddition = topicMap.keys.size
+        dao.updateTopic(Topic(-2424, "Nice topic", R.drawable.image_add_icon_customized))
+        topicsLD = dao.readAllData()
+        topicMap = LiveDataTestUtil.getValue(topicsLD)
+        assertEquals(0, topicMap.keys.size - sizeBfAddition)
+    }
+
+    @Test
+    fun deleteValidTopicTest() = runBlocking {
+        val topic1 = Topic(0, "Some name", R.drawable.university_hat_icon)
+        val topic2 = Topic(0, "Another name", R.drawable.ic_baseline_family_restroom_24)
+        val topic3 = Topic(0, "Third name", R.drawable.ic_baseline_trending_up_24)
+        val topic4 = Topic(0, "Fourth name", R.drawable.ic_baseline_golf_course_24)
+        dao.addTopic(topic1)
+        dao.addTopic(topic2)
+        dao.addTopic(topic3)
+        dao.addTopic(topic4)
+        var topicsLD = dao.readAllData()
+        var topicMap = LiveDataTestUtil.getValue(topicsLD)
+        val sizeBfDeletion = topicMap.keys.size
+        //assertEquals(4, topicMap.keys.size - sizeBfAddition)
+        topicMap.keys.forEach {
+            dao.deleteTopic(it)
+        }
+        topicsLD = dao.readAllData()
+        topicMap = LiveDataTestUtil.getValue(topicsLD)
+        assertEquals(-4, topicMap.keys.size - sizeBfDeletion)
+    }
+
+    @Test
+    fun deleteInvalidTopicTest() = runBlocking {
+        val topic1 = Topic(0, "Some name", R.drawable.university_hat_icon)
+        val topic2 = Topic(0, "Another name", R.drawable.ic_baseline_family_restroom_24)
+        val topic3 = Topic(0, "Third name", R.drawable.ic_baseline_trending_up_24)
+        val topic4 = Topic(0, "Fourth name", R.drawable.ic_baseline_golf_course_24)
+        dao.addTopic(topic1)
+        dao.addTopic(topic2)
+        dao.addTopic(topic3)
+        dao.addTopic(topic4)
+        var topicsLD = dao.readAllData()
+        var topicMap = LiveDataTestUtil.getValue(topicsLD)
+        val sizeBfDeletion = topicMap.keys.size
+        //assertEquals(4, topicMap.keys.size - sizeBfAddition)
+        topicMap.keys.forEach {
+            dao.deleteTopic(Topic(-532, it.name, it.topicImageId))
+        }
+        topicsLD = dao.readAllData()
+        topicMap = LiveDataTestUtil.getValue(topicsLD)
+        assertEquals(0, topicMap.keys.size - sizeBfDeletion)
+    }
+
+
 
 
     @After
