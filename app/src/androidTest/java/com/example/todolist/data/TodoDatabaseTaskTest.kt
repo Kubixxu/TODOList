@@ -53,6 +53,11 @@ class TodoDatabaseTaskTest {
         tasksLD = taskDao.readAllData()
         val taskListFromDb = LiveDataTestUtil.getValue(tasksLD)
         assertEquals(6, taskListFromDb.size - sizeBfAddition)
+        topicsLD = topicDao.readAllData()
+        topicMap = LiveDataTestUtil.getValue(topicsLD)
+        topicMap.values.forEach {
+            assertEquals(6, it)
+        }
         val taskListWithoutId = taskListFromDb.map { task -> Task(0, task.topic, task.name, task.date, task.flag, task.completed, task.dateCreation, task.voiceRecordPath, task.imagePath) }
         assertEquals(true, taskList.containsAll(taskListWithoutId) && taskListWithoutId.containsAll(taskList))
     }
@@ -105,7 +110,7 @@ class TodoDatabaseTaskTest {
     }
 
     @Test
-    fun updateValidTopicTest() = runBlocking {
+    fun updateValidTaskTest() = runBlocking {
         val sampleTopic = Topic(0, "Sample topic", R.drawable.university_hat_icon)
         topicDao.addTopic(sampleTopic)
         var topicsLD = topicDao.readAllData()
@@ -134,6 +139,108 @@ class TodoDatabaseTaskTest {
         }
         assertEquals(true, result)
     }
+
+    @Test
+    fun updateNonexistentTopicTest() = runBlocking {
+        val sampleTopic = Topic(1, "Sample topic", R.drawable.university_hat_icon)
+        topicDao.addTopic(sampleTopic)
+
+        val task = Task(0, sampleTopic.id, "Name", null, true, false, LocalDate.of(2021, 9, 25), null, null)
+        taskDao.addTask(task)
+        //val sizeBfAddition = taskList.size
+        taskDao.updateTask(Task(0, -234, "Name changed", null, true, false, LocalDate.of(2021, 9, 25), null, null))
+        var taskLD = taskDao.readAllData()
+        var taskList = LiveDataTestUtil.getValue(taskLD)
+        assertEquals(true, taskList[0].name == "Name")
+    }
+
+    @Test
+    fun updateNonexistentTaskTest() = runBlocking {
+        val sampleTopic = Topic(1, "Sample topic", R.drawable.university_hat_icon)
+        topicDao.addTopic(sampleTopic)
+        var tasksLD = taskDao.readAllData()
+        val taskListDB = LiveDataTestUtil.getValue(tasksLD)
+        val sizeBfAddition = taskListDB.size
+        taskDao.updateTask(Task(-90, sampleTopic.id, "Name changed", null, true, false, LocalDate.of(2021, 9, 25), null, null))
+        var taskLD = taskDao.readAllData()
+        var taskList = LiveDataTestUtil.getValue(taskLD)
+        assertEquals(0, taskList.size - sizeBfAddition)
+    }
+
+    @Test
+    fun deleteValidTaskTest() = runBlocking {
+        val sampleTopic = Topic(0, "Sample topic", R.drawable.university_hat_icon)
+        topicDao.addTopic(sampleTopic)
+        var topicsLD = topicDao.readAllData()
+        var topicMap = LiveDataTestUtil.getValue(topicsLD)
+        var topicId = 0
+        topicMap.keys.forEach { topicId = it.id }
+        val taskList = listOf<Task>(Task(0, topicId, "Task 1", LocalDate.now(), false, true, LocalDate.now(), null, null), Task(0, topicId, "Task 2", LocalDate.of(2021, 7, 11), true, true, LocalDate.of(2022, 1, 1),
+            null, null), Task(0, topicId, "Task 3", LocalDate.of(1965, 9, 17), false, false, LocalDate.of(2001, 8, 27), null, null),
+            Task(0, topicId, "Task 4", null, true, false, LocalDate.of(2009, 2, 13), null, null),
+            Task(0, topicId, "Task 5", LocalDate.of(1997, 7, 3), false, false, LocalDate.now(), null, null),
+            Task(0, topicId, "Task 6", LocalDate.now(), true, true, LocalDate.of(2023, 7,11), null, null))
+
+        taskList.forEach {
+            taskDao.addTask(it)
+        }
+
+        var tasksLD = taskDao.readAllData()
+        val taskListFromDb = LiveDataTestUtil.getValue(tasksLD)
+        val sizeBfDeletion = taskListFromDb.size
+        taskListFromDb.forEach {
+            taskDao.deleteTask(it)
+        }
+        tasksLD = taskDao.readAllData()
+        val sizeAfterDeletion = LiveDataTestUtil.getValue(tasksLD).size
+        assertEquals(-6, sizeAfterDeletion - sizeBfDeletion)
+    }
+
+    @Test
+    fun cascadeDeleteTest() = runBlocking {
+        val sampleTopic = Topic(0, "Sample topic", R.drawable.university_hat_icon)
+        topicDao.addTopic(sampleTopic)
+        var topicsLD = topicDao.readAllData()
+        var topicMap = LiveDataTestUtil.getValue(topicsLD)
+        var topicId = 0
+        topicMap.keys.forEach { topicId = it.id }
+        val taskList = listOf<Task>(Task(0, topicId, "Task 1", LocalDate.now(), false, true, LocalDate.now(), null, null), Task(0, topicId, "Task 2", LocalDate.of(2021, 7, 11), true, true, LocalDate.of(2022, 1, 1),
+            null, null), Task(0, topicId, "Task 3", LocalDate.of(1965, 9, 17), false, false, LocalDate.of(2001, 8, 27), null, null),
+            Task(0, topicId, "Task 4", null, true, false, LocalDate.of(2009, 2, 13), null, null),
+            Task(0, topicId, "Task 5", LocalDate.of(1997, 7, 3), false, false, LocalDate.now(), null, null),
+            Task(0, topicId, "Task 6", LocalDate.now(), true, true, LocalDate.of(2023, 7,11), null, null))
+
+        taskList.forEach {
+            taskDao.addTask(it)
+        }
+
+        var tasksLD = taskDao.readAllData()
+        val taskListFromDb = LiveDataTestUtil.getValue(tasksLD)
+        val sizeBfDeletion = taskListFromDb.size
+        topicMap.keys.forEach {
+            topicDao.deleteTopic(it)
+        }
+        tasksLD = taskDao.readAllData()
+        val sizeAfterDeletion = LiveDataTestUtil.getValue(tasksLD).size
+        assertEquals(-6, sizeAfterDeletion - sizeBfDeletion)
+    }
+
+    @Test
+    fun deleteInvalidTaskTest() = runBlocking {
+        val sampleTopic = Topic(0, "Sample topic", R.drawable.university_hat_icon)
+        topicDao.addTopic(sampleTopic)
+        var topicsLD = topicDao.readAllData()
+        var topicMap = LiveDataTestUtil.getValue(topicsLD)
+        var topicId = 0
+        topicMap.keys.forEach { topicId = it.id }
+        val sampleTask = Task(1, topicId, "Sample name", LocalDate.now(), false, true, LocalDate.now(), null, null)
+        taskDao.addTask(sampleTask)
+        val sizeBfDeletion = LiveDataTestUtil.getValue(taskDao.readAllData()).size
+        taskDao.deleteTask(Task(45, 67, "Sample name", LocalDate.now(), false, true, LocalDate.now(), null, null))
+        val sizeAftDeletion = LiveDataTestUtil.getValue(taskDao.readAllData()).size
+        assertEquals(0, sizeAftDeletion - sizeBfDeletion)
+    }
+
 
     @After
     fun tearDown() {
