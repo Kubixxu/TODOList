@@ -387,7 +387,6 @@ class TaskFromFragment : Fragment() {
                 }
             }
 
-
             if (!errors) {
                 taskViewModel.addTask(Task( 0, arguments?.getInt("topicId")!!,  name, taskDate, flag, false, LocalDate.now(), audioPath, imageUriIntPath?.path))
                 model.updateData(null)

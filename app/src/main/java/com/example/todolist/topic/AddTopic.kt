@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.todolist.R
@@ -58,13 +59,22 @@ class AddTopic : Fragment() {
                 insertTopicToDatabase()
                 findNavController().navigate(R.id.action_topic_addition_to_topic_list)
             }
-            else {
-                val toast = Toast.makeText(requireContext(), "You didn't specify topic name or topic icon", Toast.LENGTH_SHORT)
-                toast.show()
-                //Log.d("INVOKED", "Toast should appear")
+            if (binding.editTextTextPersonName.text.toString() == "") {
+                binding.topicNameErrorTV.visibility = View.VISIBLE
+            }
+            if (spinner.selectedItemPosition == 0) {
+                binding.topicIconErrorTV.visibility = View.VISIBLE
             }
 
         }
+
+        binding.editTextTextPersonName.doOnTextChanged { text, _, _, _ ->
+            if (text == "")
+                binding.topicNameErrorTV.visibility = View.VISIBLE
+            else
+                binding.topicNameErrorTV.visibility = View.GONE
+        }
+
     }
 
     private fun insertTopicToDatabase() {
