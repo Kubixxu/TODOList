@@ -9,6 +9,7 @@ import com.example.todolist.repository.TopicRepository
 import com.example.todolist.model.Topic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TopicViewModel(application: Application) : AndroidViewModel(application) {
     val readAllData: LiveData<Map<Topic, Int>>
@@ -19,10 +20,14 @@ class TopicViewModel(application: Application) : AndroidViewModel(application) {
         readAllData = repository.readAllData
     }
 
-    fun addTopic(topic: Topic) {
+    fun addTopic(topic: Topic)  {
         viewModelScope.launch(Dispatchers.IO) {
             repository.addTopic(topic)
         }
+    }
+
+    suspend fun addTopicAsync(topic: Topic) : Long  {
+        return repository.addTopic(topic)
     }
 
     fun updateTopic(topic: Topic) {
@@ -34,6 +39,12 @@ class TopicViewModel(application: Application) : AndroidViewModel(application) {
     fun deleteTopic(topic: Topic) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteTopic(topic)
+        }
+    }
+
+    fun deleteAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+             repository.deleteAll()
         }
     }
 

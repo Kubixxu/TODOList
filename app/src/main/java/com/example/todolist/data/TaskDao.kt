@@ -7,7 +7,7 @@ import com.example.todolist.model.Task
 @Dao
 interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addTask(task: Task)
+    suspend fun addTask(task: Task) : Long
 
     @Update
     suspend fun updateTask(task: Task)

@@ -7,10 +7,13 @@ import com.example.todolist.model.Topic
 @Dao
 interface TopicDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addTopic(topic: Topic)
+    suspend fun addTopic(topic: Topic) : Long
 
     @Update
     suspend fun updateTopic(topic: Topic)
+
+    @Query("DELETE FROM topics")
+    fun deleteAll()
 
     @Delete
     suspend fun deleteTopic(topic: Topic)
