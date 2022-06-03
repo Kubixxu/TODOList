@@ -12,8 +12,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.todolist.MainActivity
 import com.example.todolist.R
-import com.example.todolist.data.ui.EspressoTestsMatchers.withDrawable
-import com.example.todolist.data.ui.RecyclerViewMatcher.atPositionOnView
+import com.example.todolist.data.ui.utils.EspressoTestsMatchers.withDrawable
+import com.example.todolist.data.ui.utils.RecyclerViewMatcher.atPositionOnView
 import com.example.todolist.topic.TopicAdapter
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.core.AllOf.allOf

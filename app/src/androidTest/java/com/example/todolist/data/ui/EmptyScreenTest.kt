@@ -18,10 +18,12 @@ import com.example.todolist.model.Topic
 import com.example.todolist.repository.TaskRepository
 import com.example.todolist.repository.TopicRepository
 import com.example.todolist.topic.TopicAdapter
+import com.example.todolist.viewmodel.TaskViewModel
 import com.example.todolist.viewmodel.TopicViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.runner.RunWith
+import org.mockito.Mockito
 import java.io.IOException
 
 
@@ -37,22 +39,25 @@ class EmptyScreenTest {
     private lateinit var topicRepo: TopicRepository
     private lateinit var taskRepo: TaskRepository
     private lateinit var topicViewModel: TopicViewModel
+    private lateinit var taskViewModel: TaskViewModel
     private val topic = Topic(0, "University", R.drawable.school)
 
     @Before
     fun setUp() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
+        val contextApp = ApplicationProvider.getApplicationContext<Context>() as Application
         db = Room.inMemoryDatabaseBuilder(context, TodoDatabase::class.java).build()
         taskDao = db.taskDao()
         topicDao = db.topicDao()
         topicRepo = TopicRepository(topicDao)
         taskRepo = TaskRepository(taskDao)
-        topicViewModel = TopicViewModel(Application())
+        topicViewModel = TopicViewModel(contextApp)
+        taskViewModel = TaskViewModel(contextApp)
     }
 
     @After
-    @Throws(IOException::class)
     fun closeDb() {
+        topicViewModel.deleteAll()
         db.close()
     }
 
@@ -60,7 +65,6 @@ class EmptyScreenTest {
     /**
      * Check if empty screen is visible
      */
-//    @Ignore("Doesn't work because empty screen has default visibility as GONE and it doesn't change idk why")
     @Test
     fun test_isEmptyScreenVisible_onAppLaunch() {
         onView(withId(R.id.empty_list_img)).check(matches(isDisplayed()))
@@ -73,7 +77,6 @@ class EmptyScreenTest {
     /**
      * Check if after selecting topic, empty task list view is showing
      */
-//    @Ignore("Doesn't work because empty screen has default visibility as GONE and it doesn't change idk why")
     @Test
     fun test_selectITopic_isTaskInTopicFragmentVisible() {
         addTopic()

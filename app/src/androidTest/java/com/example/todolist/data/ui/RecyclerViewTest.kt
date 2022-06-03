@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -15,7 +14,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.todolist.MainActivity
 import com.example.todolist.R
 import com.example.todolist.data.*
-import com.example.todolist.data.ui.RecyclerViewMatcher.atPositionOnView
+import com.example.todolist.data.ui.utils.RecyclerViewMatcher.atPositionOnView
+import com.example.todolist.data.ui.utils.EspressoTestsMatchers
+import com.example.todolist.data.ui.utils.RecyclerViewMatcher
 import com.example.todolist.model.Task
 import com.example.todolist.model.Topic
 import com.example.todolist.repository.TaskRepository
@@ -34,7 +35,7 @@ import java.time.format.DateTimeFormatter
 
 
 @RunWith(AndroidJUnit4::class)
-class ListFragmentNavigationTest {
+class RecyclerViewTest {
 
     val FIRST_TASK_NAME : String = "FirstTask"
     val SECOND_TASK_NAME : String = "SecondTask"
@@ -49,8 +50,6 @@ class ListFragmentNavigationTest {
     )
 
     private lateinit var db: TodoDatabase
-    private lateinit var taskDao : TaskDao
-    private lateinit var topicDao : TopicDao
     private lateinit var topicRepo: TopicRepository
     private lateinit var taskRepo: TaskRepository
     private lateinit var topicViewModel: TopicViewModel
@@ -61,14 +60,12 @@ class ListFragmentNavigationTest {
     @Before
     fun setUp() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
+        val contextApp = ApplicationProvider.getApplicationContext<Context>() as Application
         db = Room.inMemoryDatabaseBuilder(context, TodoDatabase::class.java).build()
-        taskDao = db.taskDao()
-        topicDao = db.topicDao()
-        topicRepo = TopicRepository(topicDao)
-        taskRepo = TaskRepository(taskDao)
-        val applicationMock = Mockito.mock(Application::class.java)
-        topicViewModel = TopicViewModel(applicationMock)
-        taskViewModel = TaskViewModel(applicationMock)
+        topicRepo = TopicRepository(db.topicDao())
+        taskRepo = TaskRepository(db.taskDao())
+        topicViewModel = TopicViewModel(contextApp)
+        taskViewModel = TaskViewModel(contextApp)
         addTopicsAndTask()
     }
 
@@ -91,32 +88,12 @@ class ListFragmentNavigationTest {
                 .check(matches(atPositionOnView(0, withText(topics[0].name), R.id.topicName)))
         }
     }
-    /**
-     * Check if add topic form comes into view after click FAB
-     */
-    @Test
-    fun test_isCreateTopicFormDisplay() {
-        onView(withId(R.id.create_topic_fab)).perform(click())
-        onView(withId(R.id.addTopic)).check(matches(isDisplayed()))
-    }
-
-
-    /**
-     * Check if update topic form comes into view after long click
-     */
-    @Test
-    fun test_isUpdateTopicFormDisplay() {
-        onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, longClick()))
-
-        onView(withId(R.id.updateTopic)).check(matches(isDisplayed()))
-    }
 
 
     /**
      * Check if taskList comes into view after select topic
      * Check if added tasks is showing properly
-    */
+     */
 
     @Test
     fun test_topicItem_validateTasksList() {
@@ -146,8 +123,8 @@ class ListFragmentNavigationTest {
 
             if(tasksInTopic[i].flag) {
                 onView(withId(R.id.tasksList))
-                    .check(matches(atPositionOnView(i,
-                        withText(sdf.format(tasksInTopic[i].date)), R.id.date)))
+                    .check(matches(atPositionOnView(i, EspressoTestsMatchers
+                        .withDrawable(R.drawable.flag), R.id.flag)))
             } else
                 onView(withId(R.id.tasksList))
                     .check(matches(atPositionOnView(i,
@@ -156,36 +133,6 @@ class ListFragmentNavigationTest {
         }
     }
 
-    /**
-     * Check if add topic form comes into view after click FAB
-     */
-    @Test
-    fun test_isCreateTaskFormDisplay() {
-        onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
-        onView(withId(R.id.fabAddTask)).perform(click())
-        onView(withId(R.id.taskForm)).check(matches(isDisplayed()))
-    }
-
-    /**
-     * Check if update task form comes into view after long click
-     */
-    @Test
-    fun test_isUpdateTaskFormDisplay() {
-        onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
-
-        onView(withId(R.id.tasksList))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, longClick()))
-
-        onView(withId(R.id.taskForm)).check(matches(isDisplayed()))
-    }
-
-
-    /**
-     * Check if complete button work
-     * Check if completed task change itself position and completed header is showing
-     */
     @Test
     fun test_selectTask_taskChangePositionOnCompleteClick() {
         onView(withId(R.id.rvTopicItems))
@@ -193,7 +140,7 @@ class ListFragmentNavigationTest {
 
         onView(withId(R.id.tasksList)).perform(
             actionOnItemAtPosition<TasksListAdapter.TaskViewHolder>
-                (0, RecyclerViewMatcher.clickChildViewWithId(R.id.isDone)))
+                (0, RecyclerViewMatcher. clickChildViewWithId(R.id.isDone)))
 
         //waiting for save update to database and changing position
         sleep(3000)
@@ -208,20 +155,6 @@ class ListFragmentNavigationTest {
             actionOnItemAtPosition<TasksListAdapter.TaskViewHolder>
                 (2, RecyclerViewMatcher.clickChildViewWithId(R.id.isDone)))
     }
-
-    /**
-     * Check if on press back button topic list is showing
-     */
-    @Test
-    fun test_backNavigation_toTopicListItem() {
-        onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
-
-        pressBack()
-
-        onView(withId(R.id.rvTopicItems)).check(matches(isDisplayed()))
-    }
-
 
     private fun addTopicsAndTask() = runBlocking {
         for (topic in topics) {

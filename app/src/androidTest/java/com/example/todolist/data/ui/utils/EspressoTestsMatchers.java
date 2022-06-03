@@ -1,4 +1,4 @@
-package com.example.todolist.data.ui;
+package com.example.todolist.data.ui.utils;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
