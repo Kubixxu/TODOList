@@ -23,8 +23,6 @@ import com.example.todolist.viewmodel.TopicViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.runner.RunWith
-import org.mockito.Mockito
-import java.io.IOException
 
 
 @RunWith(AndroidJUnit4::class)

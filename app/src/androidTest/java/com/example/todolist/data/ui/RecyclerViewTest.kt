@@ -28,7 +28,6 @@ import com.example.todolist.viewmodel.TopicViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import java.lang.Thread.sleep
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -37,9 +36,9 @@ import java.time.format.DateTimeFormatter
 @RunWith(AndroidJUnit4::class)
 class RecyclerViewTest {
 
-    val FIRST_TASK_NAME : String = "FirstTask"
-    val SECOND_TASK_NAME : String = "SecondTask"
-    val COMPLETE_HEADER : String = "Completed"
+    private val FIRST_TASK_NAME : String = "FirstTask"
+    private val SECOND_TASK_NAME : String = "SecondTask"
+    private val COMPLETE_HEADER : String = "Completed"
 
     @get: Rule
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
@@ -78,7 +77,7 @@ class RecyclerViewTest {
 
     /**
      * Check if topicList comes into view
-     * Check if added topics is showing properly
+     * Check if topics is showing properly
      */
     @Test
     fun test_isTopicsListVisible_withExistingTopics() {
@@ -92,9 +91,8 @@ class RecyclerViewTest {
 
     /**
      * Check if taskList comes into view after select topic
-     * Check if added tasks is showing properly
+     * Check if tasks is showing properly
      */
-
     @Test
     fun test_topicItem_validateTasksList() {
         onView(withId(R.id.rvTopicItems))
@@ -133,6 +131,11 @@ class RecyclerViewTest {
         }
     }
 
+    /**
+     * Check if click completed task button work
+     * Check if task change itself position
+     * Check if "Completed" header appeared
+     */
     @Test
     fun test_selectTask_taskChangePositionOnCompleteClick() {
         onView(withId(R.id.rvTopicItems))

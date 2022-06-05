@@ -29,14 +29,20 @@ import org.junit.runners.MethodSorters
 @RunWith(AndroidJUnit4::class)
 class TopicCRUDFragmentTest {
 
-    val TOPIC_NAME = "TopicExample"
-    val TOPIC_NAME_UPDATED = "TopicExampleUpdate"
-    val ICON = R.drawable.school
-    val ICON_UPDATED = R.drawable.ic_baseline_handyman_24
+    private val TOPIC_NAME = "TopicExample"
+    private val TOPIC_NAME_UPDATED = "TopicExampleUpdate"
+    private val ICON = R.drawable.school
+    private val ICON_UPDATED = R.drawable.ic_baseline_handyman_24
 
     @get: Rule
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
+
+    /**
+     * Check if create topic form comes into view after click FAB
+     * Check if input data and create button work
+     * Check if new topic was added successfully with properly data
+     */
     @Test
     fun test_A_createNewTopic() {
         onView(withId(R.id.create_topic_fab)).perform(click())
@@ -55,6 +61,11 @@ class TopicCRUDFragmentTest {
             .check(matches(atPositionOnView(0, withDrawable(ICON), R.id.topicIcon)))
     }
 
+    /**
+     * Check if update topic form comes into view after long click
+     * Check if input data and update button work
+     * Check if new topic was updated successfully with properly data
+     */
     //TODO ICON doesn't change
     @Test
     fun test_B_updateTopic() {
@@ -71,13 +82,43 @@ class TopicCRUDFragmentTest {
             .check(matches(atPositionOnView(0, withText(TOPIC_NAME_UPDATED), R.id.topicName)))
 
 //        onView(withId(R.id.rvTopicItems))
-//            .check(matches(atPositionOnView(0, withDrawable(ICON), R.id.topicIcon)))
+//            .check(matches(atPositionOnView(0, withDrawable(ICON_UPDATED), R.id.topicIcon)))
     }
 
+    /**
+     * Check if alert dialog about deleting task is showing on swipe left
+     * Check if press "No" then topic is not deleted
+     */
     @Test
-    fun test_C_deleteTopic() {
+    fun test_C_notDeleteTopic() {
         onView(withId(R.id.rvTopicItems))
             .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, swipeLeft()))
+
+        onView(withText("Are you sure you want to delete topic ${TOPIC_NAME_UPDATED}?"))
+            .check(matches(isDisplayed()));
+
+        onView(withText("No")).inRoot(isDialog())
+            .check(matches(isDisplayed())).perform(click())
+
+        onView(withId(R.id.rvTopicItems))
+            .check(matches(atPositionOnView(0, withText(TOPIC_NAME_UPDATED), R.id.topicName)))
+
+//        onView(withId(R.id.rvTopicItems))
+//            .check(matches(atPositionOnView(0, withDrawable(ICON_UPDATED), R.id.topicIcon)))
+    }
+
+    /**
+     * Check if alert dialog about deleting task is showing on swipe left
+     * Check if press "Yes" delete topic
+     * Check if topic is not showing
+     */
+    @Test
+    fun test_D_deleteTopic() {
+        onView(withId(R.id.rvTopicItems))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, swipeLeft()))
+
+        onView(withText("Are you sure you want to delete topic ${TOPIC_NAME_UPDATED}?"))
+            .check(matches(isDisplayed()));
 
         onView(withText("Yes")).inRoot(isDialog())
             .check(matches(isDisplayed())).perform(click())

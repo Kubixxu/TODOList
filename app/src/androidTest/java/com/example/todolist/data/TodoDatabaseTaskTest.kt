@@ -48,7 +48,7 @@ class TodoDatabaseTaskTest {
             Task(0, topicId, "Task 6", LocalDate.now(), true, true, LocalDate.of(2023, 7,11), null, null))
 
         taskList.forEach {
-            taskDao.addTask(it)
+            val id = taskDao.addTask(it)
         }
         tasksLD = taskDao.readAllData()
         val taskListFromDb = LiveDataTestUtil.getValue(tasksLD)
@@ -67,7 +67,7 @@ class TodoDatabaseTaskTest {
 
         var tasksLD = taskDao.readAllData()
         val sizeBfAddition = LiveDataTestUtil.getValue(tasksLD).size
-        taskDao.addTask(Task(0, -12, "Simple name", LocalDate.now(), true, true, LocalDate.now(), null, null))
+        val id = taskDao.addTask(Task(0, -12, "Simple name", LocalDate.now(), true, true, LocalDate.now(), null, null))
 
     }
 
@@ -101,8 +101,8 @@ class TodoDatabaseTaskTest {
         val sizeBfAddition = taskList.size
         val task1 = Task(10, 1, "Name 1", null, false, false, LocalDate.now(), null, null)
         val task2 = Task(10, 1, "Name 2", LocalDate.now(), false, false, LocalDate.now(), null, null)
-        taskDao.addTask(task1)
-        taskDao.addTask(task2)
+        val id = taskDao.addTask(task1)
+        val id1 = taskDao.addTask(task2)
         taskLD = taskDao.readAllData()
         taskList = LiveDataTestUtil.getValue(taskLD)
         assertEquals(1, taskList.size - sizeBfAddition)

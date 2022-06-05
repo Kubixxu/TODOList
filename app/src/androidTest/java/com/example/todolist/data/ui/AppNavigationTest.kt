@@ -32,8 +32,8 @@ import java.time.LocalDate
 @RunWith(AndroidJUnit4::class)
 class AppNavigationTest {
 
-    val FIRST_TASK_NAME : String = "FirstTask"
-    val SECOND_TASK_NAME : String = "SecondTask"
+    private val FIRST_TASK_NAME : String = "FirstTask"
+    private val SECOND_TASK_NAME : String = "SecondTask"
 
     @get: Rule
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
@@ -212,3 +212,5 @@ class AppNavigationTest {
 }
 
 //Context jest wspólny
+//Fail na iconach
+//Testy validacji?
