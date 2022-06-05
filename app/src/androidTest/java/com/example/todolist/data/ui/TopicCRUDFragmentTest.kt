@@ -16,6 +16,7 @@ import com.example.todolist.data.ui.utils.EspressoTestsMatchers.withDrawable
 import com.example.todolist.data.ui.utils.RecyclerViewMatcher.atPositionOnView
 import com.example.todolist.topic.TopicAdapter
 import org.hamcrest.CoreMatchers.instanceOf
+import org.hamcrest.CoreMatchers.not
 import org.hamcrest.core.AllOf.allOf
 import org.hamcrest.core.Is.`is`
 import org.junit.FixMethodOrder
@@ -37,6 +38,17 @@ class TopicCRUDFragmentTest {
     @get: Rule
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
+    @Test
+    fun test_A_createNewTopic_validation() {
+        onView(withId(R.id.create_topic_fab)).perform(click())
+
+        onView(withId(R.id.accept_create_topic_fab)).perform(click())
+
+        onView(withId(R.id.addTopic)).check(matches(isDisplayed()))
+        onView(withId(R.id.topicNameErrorTV)).check(matches(isDisplayed()))
+        onView(withId(R.id.topicIconErrorTV)).check(matches(isDisplayed()))
+    }
+
 
     /**
      * Check if create topic form comes into view after click FAB
@@ -44,7 +56,7 @@ class TopicCRUDFragmentTest {
      * Check if new topic was added successfully with properly data
      */
     @Test
-    fun test_A_createNewTopic() {
+    fun test_B_createNewTopic() {
         onView(withId(R.id.create_topic_fab)).perform(click())
 
         onView(withId(R.id.editTextTextPersonName)).perform(typeText(TOPIC_NAME))
@@ -68,7 +80,7 @@ class TopicCRUDFragmentTest {
      */
     //TODO ICON doesn't change
     @Test
-    fun test_B_updateTopic() {
+    fun test_C_updateTopic() {
         onView(withId(R.id.rvTopicItems))
             .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, longClick()))
 
@@ -90,7 +102,7 @@ class TopicCRUDFragmentTest {
      * Check if press "No" then topic is not deleted
      */
     @Test
-    fun test_C_notDeleteTopic() {
+    fun test_D_notDeleteTopic() {
         onView(withId(R.id.rvTopicItems))
             .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, swipeLeft()))
 
@@ -113,7 +125,7 @@ class TopicCRUDFragmentTest {
      * Check if topic is not showing
      */
     @Test
-    fun test_D_deleteTopic() {
+    fun test_E_deleteTopic() {
         onView(withId(R.id.rvTopicItems))
             .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, swipeLeft()))
 
