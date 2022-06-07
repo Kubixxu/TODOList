@@ -13,7 +13,7 @@ import java.io.File
 
 class TaskViewModel(application: Application) : AndroidViewModel(application) {
     val readAllData: LiveData<List<Task>>
-    private val repository: TaskRepository
+    val repository: TaskRepository
     init {
         val taskDao = TodoDatabase.getDatabase(application).taskDao()
         repository = TaskRepository(taskDao)

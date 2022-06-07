@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -56,7 +57,12 @@ class TopicList : Fragment() {
         val emptyText1 : TextView = binding.root.findViewById(R.id.empty_textView1)
         val emptyText2 : TextView = binding.root.findViewById(R.id.empty_textView2)
         val emptyArrowImg2 : ImageView = binding.root.findViewById(R.id.empty_point_arrow2)
-        mTopicViewModel = ViewModelProvider(this).get(TopicViewModel::class.java)
+//        mTopicViewModel = ViewModelProvider(this).get(TopicViewModel::class.java)
+
+        mTopicViewModel = activity?.run {
+            ViewModelProviders.of(this)[TopicViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
+
         mTopicViewModel.readAllData.observe(viewLifecycleOwner, Observer {
             topic ->
             topicListAdapter.setData(changeTopicMapToList(topic)); if (topic.isEmpty()) {

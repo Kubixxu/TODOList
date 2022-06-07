@@ -12,8 +12,12 @@ interface TopicDao {
     @Update
     suspend fun updateTopic(topic: Topic)
 
-    @Query("DELETE FROM topics")
-    fun deleteAll()
+    @Query("DELETE FROM topics WHERE id = :id")
+    fun deleteTopicById(id: Int)
+
+
+    @Query("SELECT COUNT(*) FROM topics")
+    fun getTopicCount() : Int
 
     @Delete
     suspend fun deleteTopic(topic: Topic)

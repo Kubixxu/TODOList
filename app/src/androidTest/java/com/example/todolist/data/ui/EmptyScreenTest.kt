@@ -1,9 +1,6 @@
 package com.example.todolist.data.ui
 
 import android.app.Application
-import android.content.Context
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -13,10 +10,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.todolist.MainActivity
 import com.example.todolist.R
-import com.example.todolist.data.*
 import com.example.todolist.model.Topic
-import com.example.todolist.repository.TaskRepository
-import com.example.todolist.repository.TopicRepository
 import com.example.todolist.topic.TopicAdapter
 import com.example.todolist.viewmodel.TaskViewModel
 import com.example.todolist.viewmodel.TopicViewModel
@@ -31,32 +25,23 @@ class EmptyScreenTest {
     @get: Rule
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
-    private lateinit var db: TodoDatabase
-    private lateinit var taskDao : TaskDao
-    private lateinit var topicDao : TopicDao
-    private lateinit var topicRepo: TopicRepository
-    private lateinit var taskRepo: TaskRepository
+
+    private val topic = Topic(0, "University", R.drawable.school)
+    private var position: Int = -1
     private lateinit var topicViewModel: TopicViewModel
     private lateinit var taskViewModel: TaskViewModel
-    private val topic = Topic(0, "University", R.drawable.school)
+    private var topicId = -1
 
     @Before
     fun setUp() = runBlocking {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        val contextApp = ApplicationProvider.getApplicationContext<Context>() as Application
-        db = Room.inMemoryDatabaseBuilder(context, TodoDatabase::class.java).build()
-        taskDao = db.taskDao()
-        topicDao = db.topicDao()
-        topicRepo = TopicRepository(topicDao)
-        taskRepo = TaskRepository(taskDao)
-        topicViewModel = TopicViewModel(contextApp)
-        taskViewModel = TaskViewModel(contextApp)
+        topicViewModel = TopicViewModel(Application())
+        taskViewModel = TaskViewModel(Application())
+        position = topicViewModel.getTopicCount()
     }
 
     @After
     fun closeDb() {
-        topicViewModel.deleteAll()
-        db.close()
+        topicViewModel.deleteTopicById(topicId)
     }
 
 
@@ -65,10 +50,14 @@ class EmptyScreenTest {
      */
     @Test
     fun test_isEmptyScreenVisible_onAppLaunch() {
-        onView(withId(R.id.empty_list_img)).check(matches(isDisplayed()))
-        onView(withId(R.id.empty_textView1)).check(matches(isDisplayed()))
-        onView(withId(R.id.empty_textView2)).check(matches(isDisplayed()))
-        onView(withId(R.id.empty_point_arrow2)).check(matches(isDisplayed()))
+        if (position == 0) {
+            onView(withId(R.id.empty_list_img)).check(matches(isDisplayed()))
+            onView(withId(R.id.empty_textView1)).check(matches(isDisplayed()))
+            onView(withId(R.id.empty_textView2)).check(matches(isDisplayed()))
+            onView(withId(R.id.empty_point_arrow2)).check(matches(isDisplayed()))
+        } else {
+            onView(withId(R.id.rvTopicItems)).check(matches(isDisplayed()))
+        }
     }
 
 
@@ -79,7 +68,7 @@ class EmptyScreenTest {
     fun test_selectITopic_isTaskInTopicFragmentVisible() {
         addTopic()
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, click()))
 
         onView(withId(R.id.emptyTasksImage)).check(matches(isDisplayed()))
         onView(withId(R.id.emptyTasksText)).check(matches(isDisplayed()))
@@ -87,6 +76,6 @@ class EmptyScreenTest {
     }
 
     private fun addTopic() = runBlocking {
-        topicViewModel.addTopic(topic)
+        topicId = topicViewModel.addTopicAsync(topic).toInt()
     }
 }

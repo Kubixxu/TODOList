@@ -1,9 +1,6 @@
 package com.example.todolist.data.ui
 
 import android.app.Application
-import android.content.Context
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
@@ -14,18 +11,14 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.todolist.MainActivity
 import com.example.todolist.R
-import com.example.todolist.data.*
 import com.example.todolist.model.Task
 import com.example.todolist.model.Topic
-import com.example.todolist.repository.TaskRepository
-import com.example.todolist.repository.TopicRepository
 import com.example.todolist.topic.TopicAdapter
 import com.example.todolist.viewmodel.TaskViewModel
 import com.example.todolist.viewmodel.TopicViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import java.time.LocalDate
 
 
@@ -43,11 +36,7 @@ class AppNavigationTest {
         Topic(0, "Car", R.drawable.ic_baseline_handyman_24),
     )
 
-    private lateinit var db: TodoDatabase
-    private lateinit var taskDao : TaskDao
-    private lateinit var topicDao : TopicDao
-    private lateinit var topicRepo: TopicRepository
-    private lateinit var taskRepo: TaskRepository
+    private var position: Int = -1
     private lateinit var topicViewModel: TopicViewModel
     private lateinit var taskViewModel: TaskViewModel
     private var topicIds: MutableList<Long> = emptyList<Long>().toMutableList()
@@ -55,22 +44,16 @@ class AppNavigationTest {
 
     @Before
     fun setUp() = runBlocking {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(context, TodoDatabase::class.java).build()
-        taskDao = db.taskDao()
-        topicDao = db.topicDao()
-        topicRepo = TopicRepository(topicDao)
-        taskRepo = TaskRepository(taskDao)
-        val applicationMock = Mockito.mock(Application::class.java)
-        topicViewModel = TopicViewModel(applicationMock)
-        taskViewModel = TaskViewModel(applicationMock)
+        topicViewModel = TopicViewModel(Application())
+        taskViewModel = TaskViewModel(Application())
+        position = topicViewModel.getTopicCount()
         addTopicsAndTask()
     }
 
     @After
     fun closeDb() {
-        topicViewModel.deleteAll()
-        db.close()
+        for (id in topicIds)
+            topicViewModel.deleteTopicById(id.toInt())
     }
 
 
@@ -108,7 +91,7 @@ class AppNavigationTest {
     @Test
     fun test_isUpdateTopicFormDisplay() {
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, longClick()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, longClick()))
 
         onView(withId(R.id.updateTopic)).check(matches(isDisplayed()))
     }
@@ -116,7 +99,7 @@ class AppNavigationTest {
     @Test
     fun test_backNavigation_toTopicListItemFromUpdate() {
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, longClick()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, longClick()))
 
         pressBack()
 
@@ -131,7 +114,7 @@ class AppNavigationTest {
         onView(withId(R.id.rvTopicItems))
 
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, click()))
 
         onView(withId(R.id.tasksList)).check(matches(isDisplayed()))
     }
@@ -139,7 +122,7 @@ class AppNavigationTest {
     @Test
     fun test_backNavigation_toTopicListItem() {
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, click()))
 
         pressBack()
 
@@ -152,7 +135,7 @@ class AppNavigationTest {
     @Test
     fun test_isCreateTaskFormDisplay() {
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, click()))
         onView(withId(R.id.fabAddTask)).perform(click())
         onView(withId(R.id.taskForm)).check(matches(isDisplayed()))
     }
@@ -160,12 +143,12 @@ class AppNavigationTest {
     @Test
     fun test_backNavigation_toTaskListItemFromCreate() {
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, click()))
         onView(withId(R.id.fabAddTask)).perform(click())
 
         pressBack()
 
-        onView(withId(R.id.rvTopicItems)).check(matches(isDisplayed()))
+        onView(withId(R.id.tasksList)).check(matches(isDisplayed()))
     }
 
     /**
@@ -174,7 +157,7 @@ class AppNavigationTest {
     @Test
     fun test_isUpdateTaskFormDisplay() {
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, click()))
         onView(withId(R.id.tasksList))
             .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, longClick()))
 
@@ -184,14 +167,15 @@ class AppNavigationTest {
     @Test
     fun test_backNavigation_toTaskListItemFromUpdate() {
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, click()))
         onView(withId(R.id.tasksList))
             .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, longClick()))
 
         pressBack()
 
-        onView(withId(R.id.rvTopicItems)).check(matches(isDisplayed()))
+        onView(withId(R.id.tasksList)).check(matches(isDisplayed()))
     }
+
 
     private fun addTopicsAndTask() = runBlocking {
         for (topic in topics) {
@@ -210,7 +194,3 @@ class AppNavigationTest {
         }
     }
 }
-
-//Context jest wspólny
-//Fail na iconach
-//Testy validacji?

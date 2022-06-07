@@ -7,10 +7,6 @@ import com.example.todolist.model.Task
 class TaskRepository(private val taskDao: TaskDao) {
     val readAllData: LiveData<List<Task>> = taskDao.readAllData()
 
-    fun readTasksFromTopic(topicId: Int) {
-        taskDao.readTasksFromTopic(topicId)
-    }
-
     suspend fun addTask(task: Task) {
         taskDao.addTask(task)
     }

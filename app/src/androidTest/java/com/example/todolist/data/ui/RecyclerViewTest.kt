@@ -1,9 +1,6 @@
 package com.example.todolist.data.ui
 
 import android.app.Application
-import android.content.Context
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -13,18 +10,15 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.todolist.MainActivity
 import com.example.todolist.R
-import com.example.todolist.data.*
-import com.example.todolist.data.ui.utils.RecyclerViewMatcher.atPositionOnView
-import com.example.todolist.data.ui.utils.EspressoTestsMatchers
-import com.example.todolist.data.ui.utils.RecyclerViewMatcher
 import com.example.todolist.model.Task
 import com.example.todolist.model.Topic
-import com.example.todolist.repository.TaskRepository
-import com.example.todolist.repository.TopicRepository
 import com.example.todolist.task.TasksListAdapter
 import com.example.todolist.topic.TopicAdapter
 import com.example.todolist.viewmodel.TaskViewModel
 import com.example.todolist.viewmodel.TopicViewModel
+import com.example.todolist.data.ui.utils.EspressoTestsMatchers
+import com.example.todolist.data.ui.utils.RecyclerViewMatcher
+import com.example.todolist.data.ui.utils.RecyclerViewMatcher.atPositionOnView
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.runner.RunWith
@@ -48,9 +42,7 @@ class RecyclerViewTest {
         Topic(0, "Car", R.drawable.ic_baseline_handyman_24),
     )
 
-    private lateinit var db: TodoDatabase
-    private lateinit var topicRepo: TopicRepository
-    private lateinit var taskRepo: TaskRepository
+    private var position: Int = -1
     private lateinit var topicViewModel: TopicViewModel
     private lateinit var taskViewModel: TaskViewModel
     private var topicIds: MutableList<Long> = emptyList<Long>().toMutableList()
@@ -58,20 +50,16 @@ class RecyclerViewTest {
 
     @Before
     fun setUp() = runBlocking {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        val contextApp = ApplicationProvider.getApplicationContext<Context>() as Application
-        db = Room.inMemoryDatabaseBuilder(context, TodoDatabase::class.java).build()
-        topicRepo = TopicRepository(db.topicDao())
-        taskRepo = TaskRepository(db.taskDao())
-        topicViewModel = TopicViewModel(contextApp)
-        taskViewModel = TaskViewModel(contextApp)
+        topicViewModel = TopicViewModel(Application())
+        taskViewModel = TaskViewModel(Application())
+        position = topicViewModel.getTopicCount()
         addTopicsAndTask()
     }
 
     @After
     fun closeDb() {
-        topicViewModel.deleteAll()
-        db.close()
+        for (id in topicIds)
+            topicViewModel.deleteTopicById(id.toInt())
     }
 
 
@@ -84,7 +72,7 @@ class RecyclerViewTest {
         onView(withId(R.id.rvTopicItems)).check(matches(isDisplayed()))
         for (i in topics.indices) {
             onView(withId(R.id.rvTopicItems))
-                .check(matches(atPositionOnView(0, withText(topics[0].name), R.id.topicName)))
+                .check(matches(atPositionOnView(position, withText(topics[0].name), R.id.topicName)))
         }
     }
 
@@ -98,7 +86,7 @@ class RecyclerViewTest {
         onView(withId(R.id.rvTopicItems))
 
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, click()))
 
         onView(withId(R.id.tasksList)).check(matches(isDisplayed()))
 
@@ -139,7 +127,7 @@ class RecyclerViewTest {
     @Test
     fun test_selectTask_taskChangePositionOnCompleteClick() {
         onView(withId(R.id.rvTopicItems))
-            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(0, click()))
+            .perform(actionOnItemAtPosition<TopicAdapter.TopicViewHolder>(position, click()))
 
         onView(withId(R.id.tasksList)).perform(
             actionOnItemAtPosition<TasksListAdapter.TaskViewHolder>

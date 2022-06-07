@@ -20,7 +20,11 @@ class TopicRepository(private val topicDao: TopicDao) {
         topicDao.deleteTopic(topic)
     }
 
-    fun deleteAll() {
-        topicDao.deleteAll()
+    fun getTopicCount() : Int {
+        return topicDao.getTopicCount()
+    }
+
+    fun deleteTopicById(id: Int) {
+        topicDao.deleteTopicById(id)
     }
 }

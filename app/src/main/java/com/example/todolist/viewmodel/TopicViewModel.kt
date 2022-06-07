@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 
 class TopicViewModel(application: Application) : AndroidViewModel(application) {
     val readAllData: LiveData<Map<Topic, Int>>
-    private val repository: TopicRepository
+    val repository: TopicRepository
     init {
         val topicDao = TodoDatabase.getDatabase(application).topicDao()
         repository = TopicRepository(topicDao)
@@ -42,10 +42,14 @@ class TopicViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun deleteAll() {
+    fun deleteTopicById(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-             repository.deleteAll()
+             repository.deleteTopicById(id)
         }
+    }
+
+    fun getTopicCount() : Int {
+        return repository.getTopicCount()
     }
 
 }
